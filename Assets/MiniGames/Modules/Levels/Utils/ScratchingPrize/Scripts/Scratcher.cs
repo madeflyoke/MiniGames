@@ -1,17 +1,17 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Threading;
-using UnityEditor;
-using System.Reflection;
 using System;
 using DG.Tweening;
 using UnityEngine.UI;
-using UnityEditor.U2D.Sprites;
+using Zenject;
 
-namespace MiniGames.Scratching
+namespace MiniGames.Modules.Level.Utils
 {
     public class Scratcher : MonoBehaviour
     {
+        [Inject] private SpritesOriginalSizes spritesOriginalSizes;
+
         private const string rtTexture = "_DrawTexture";
 
         public event Action startTouching;
@@ -38,8 +38,7 @@ namespace MiniGames.Scratching
         private bool canScratch;
 
         private void Awake()
-        {
-          
+        {    
             exitButton.transform.parent.gameObject.SetActive(false);
             mainCam = Camera.main;
             renderTextureCam.transform.position = new Vector3(0, 0, trailPrefab.transform.position.z - 5);
@@ -57,13 +56,12 @@ namespace MiniGames.Scratching
 
             Vector2 worldMainTextureCenter = new Vector2(sprite.texture.width / 2, sprite.texture.height / 2) / 100;
             Vector2 worldSpriteCenter = sprite.rect.center / 100;
-            //GetOriginalTextureSize(sprite.texture, out int width, out int height);
-            int height = 0;
-                int width = 0;
+            Vector2 size = spritesOriginalSizes.GetOriginalWidthHeight(sprite.texture);
+            int width = (int)size.x;
+            int height = (int)size.y;
             Vector2 sizeCorrections = new Vector2((float)width / sprite.texture.width, (float)height / sprite.texture.height);
             correctionOffset = worldSpriteCenter - worldMainTextureCenter;
-            correctionOffset = new Vector2(correctionOffset.x, correctionOffset.y) * sizeCorrections.x;
-
+            correctionOffset = new Vector2(correctionOffset.x, correctionOffset.y) * sizeCorrections.x*targetSr.transform.localScale;
             currentRT = new RenderTexture(sprite.texture.width, sprite.texture.height, 1);
             renderTextureCam.targetTexture = currentRT;
             renderTextureCam.orthographicSize = sprite.texture.height / sprite.pixelsPerUnit
@@ -145,9 +143,7 @@ namespace MiniGames.Scratching
                 }
             }
         }
-
        
-
         private async void SetTrail()
         {
             cancellationToken = new CancellationTokenSource();

@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using MiniGames.Modules.Level.Utils;
 using Random = UnityEngine.Random;
 using Cysharp.Threading.Tasks;
-using MiniGames.Scratching;
 using System.Threading;
 
 namespace MiniGames.Modules.Level.Math

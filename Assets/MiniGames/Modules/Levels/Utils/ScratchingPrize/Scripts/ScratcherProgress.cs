@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using Unity.Collections;
 
-namespace MiniGames.Scratching
+namespace MiniGames.Modules.Level.Utils
 {
     public class ScratcherProgress : MonoBehaviour
     {
@@ -121,7 +121,6 @@ namespace MiniGames.Scratching
                 //{
                 //    Debug.Log("100");
                 //}
-
                 targetSpritePixels.Dispose();
                 resultArray.Dispose();
                 rtPixels.Dispose();

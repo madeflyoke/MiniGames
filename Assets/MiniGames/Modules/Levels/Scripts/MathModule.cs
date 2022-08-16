@@ -1,6 +1,6 @@
 using MiniGames.Modules;
 using MiniGames.Modules.Level.Math;
-using MiniGames.Scratching;
+using MiniGames.Modules.Level.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,11 +14,11 @@ namespace MiniGames.Modules.Level
 
         private void OnEnable()
         {
-            
+
         }
         private void OnDisable()
         {
-            
+
         }
 
 

@@ -10,7 +10,7 @@ Material:
   m_Name: SilhouetteMat
   m_Shader: {fileID: -6465566751694194690, guid: ce116f31ff1548745b029e3922b21b23, type: 3}
   m_ValidKeywords:
-  - _MODE_TEXTURE
+  - _MODE_COLOR
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -62,7 +62,7 @@ Material:
     - _BOO: 0
     - _Boolean: 1
     - _ISTEXTURE: 0
-    - _MODE: 1
+    - _MODE: 0
     - _Rotate: 0
     - _WrapperRotation: 0
     - _isActive: 1
