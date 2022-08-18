@@ -115,6 +115,10 @@ namespace MiniGames.Modules.Level.Utils
                 {
                     Debug.Log("end");
                     fillingCompleteEvent?.Invoke();
+                    targetSpritePixels.Dispose();
+                    resultArray.Dispose();
+                    rtPixels.Dispose();
+                    return;
                 }
 
                 //if (targetPixelsCount == targetPixelsFilled)

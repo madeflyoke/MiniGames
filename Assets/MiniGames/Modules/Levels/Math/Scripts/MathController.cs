@@ -5,6 +5,7 @@ using MiniGames.Modules.Level.Utils;
 using Random = UnityEngine.Random;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using System;
 
 namespace MiniGames.Modules.Level.Math
 {
@@ -40,7 +41,7 @@ namespace MiniGames.Modules.Level.Math
             winEffect.transform.position = Vector3.zero + (Vector3.forward * 5);
         }
 
-        private async void Start()
+        public async void StartGame()
         {
             await UniTask.Delay((int)(startDelay * 1000), cancellationToken: cancellationToken.Token);
             question.SetupQuestion(() => animator.ShowingAnimation(() => {

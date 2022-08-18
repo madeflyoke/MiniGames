@@ -5,6 +5,7 @@ using System;
 using DG.Tweening;
 using UnityEngine.UI;
 using Zenject;
+using MiniGames.Managers;
 
 namespace MiniGames.Modules.Level.Utils
 {
@@ -15,6 +16,7 @@ namespace MiniGames.Modules.Level.Utils
         private const string rtTexture = "_DrawTexture";
 
         public event Action startTouching;
+        public event Action exitButtonPressedEvent;
 
         [Header("Utils")]
         [SerializeField] private ParticleSystem scratchEffect;
@@ -109,8 +111,12 @@ namespace MiniGames.Modules.Level.Utils
             targetSr.transform.DOScale(targetSr.transform.localScale * 1.05f, 2.5f).SetEase(Ease.OutCirc)
                 .OnComplete(() =>
                 {
-                    exitButton.transform.parent.gameObject.SetActive(false);
-                    
+                    exitButton.transform.parent.gameObject.SetActive(true);
+                    exitButton.onClick.AddListener(() => {
+                        exitButton.transform.DOPunchScale(Vector3.one * 0.1f,0.2f);
+                        exitButtonPressedEvent?.Invoke();
+                    }); 
+                    exitButton.transform.DOScale(exitButton.transform.localScale * 1.1f, 0.3f);
                 });
         }
 

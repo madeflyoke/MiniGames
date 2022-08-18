@@ -7,7 +7,3 @@ public enum LevelModule
     TOTEM_UNDEFINED
 }
 
-public enum MainModule
-{
-    Menu
-}

@@ -7,7 +7,7 @@ namespace MiniGames.Modules.Level.Utils
 {
     public class BackToMenuSlider : MonoBehaviour, IEndDragHandler, IDragHandler
     {
-        public event Action backToMenuEvent;
+        public event Action exitSliderCompleteEvent;
 
         [SerializeField] private Slider slider;
 
@@ -30,7 +30,7 @@ namespace MiniGames.Modules.Level.Utils
             if (slider.value == slider.maxValue)
             {
                 slider.interactable = false;
-                backToMenuEvent?.Invoke();
+                exitSliderCompleteEvent?.Invoke();
             }
         }
 
