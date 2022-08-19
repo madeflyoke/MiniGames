@@ -5,7 +5,6 @@ using System;
 using DG.Tweening;
 using UnityEngine.UI;
 using Zenject;
-using MiniGames.Managers;
 
 namespace MiniGames.Modules.Level.Utils
 {
@@ -113,10 +112,9 @@ namespace MiniGames.Modules.Level.Utils
                 {
                     exitButton.transform.parent.gameObject.SetActive(true);
                     exitButton.onClick.AddListener(() => {
-                        exitButton.transform.DOPunchScale(Vector3.one * 0.1f,0.2f);
-                        exitButtonPressedEvent?.Invoke();
+                        exitButton.transform.DOPunchScale(Vector3.one * 0.1f,0.2f).OnComplete(()=>
+                         exitButtonPressedEvent?.Invoke());                   
                     }); 
-                    exitButton.transform.DOScale(exitButton.transform.localScale * 1.1f, 0.3f);
                 });
         }
 
@@ -161,7 +159,7 @@ namespace MiniGames.Modules.Level.Utils
             scratchEffect.gameObject.SetActive(true);
             scratchEffect.Play();
 
-            var trail = Instantiate(trailPrefab, correctMousePos, Quaternion.identity);
+            var trail = Instantiate(trailPrefab, correctMousePos, Quaternion.identity,transform);
             while (Input.GetKey(KeyCode.Mouse0))
             {
                 pos = mainCam.ScreenToWorldPoint(Input.mousePosition);

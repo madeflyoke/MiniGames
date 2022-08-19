@@ -32,8 +32,6 @@ namespace MiniGames.Modules.Level.Utils
             correctObject = correct;
         }
 
-   
-
         public void OnDrop(PointerEventData eventData)
         {
             

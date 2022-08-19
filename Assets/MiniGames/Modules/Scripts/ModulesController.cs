@@ -11,24 +11,22 @@ namespace MiniGames.Managers
 {
     public class ModulesController : MonoBehaviour
     {
-        [SerializeField] private MenuModule menuModule;
-        [SerializeField] private MathModule mathModule;
-        [SerializeField] private LoadingScreen loadingScreen; 
+        [Inject] private DiContainer container;
+
+        [SerializeField] private GameObject menuModulePrefab;
+        [SerializeField] private GameObject mathModulePrefab;
+        [SerializeField] private LoadingScreen loadingScreen;
         private Module currentModule;
-        private DiContainer container;
         private CancellationTokenSource cancellationToken;
 
         private void Awake()
         {
             cancellationToken = new CancellationTokenSource();
-            menuModule.ChooseMenu.levelChosenEvent += LoadLevelModule;
-            mathModule.backToMenuEvent += LoadMenuModule;
         }
 
-        private void OnDisable() //never disabling?? i.e. full game lifetime and zenject access
+        private void Start()
         {
-            menuModule.ChooseMenu.levelChosenEvent -= LoadLevelModule;
-            mathModule.backToMenuEvent -= LoadMenuModule;
+            LoadMenuModule(MenuModule.Mode.MainMenu);
         }
 
         private async void LoadLevelModule(LevelModule levelType)
@@ -38,7 +36,9 @@ namespace MiniGames.Managers
             switch (levelType)
             {
                 case LevelModule.Math:
-                    currentModule = container.InstantiatePrefab(mathModule.gameObject).GetComponent<Module>();
+                    currentModule = container.InstantiatePrefab(mathModulePrefab.gameObject).GetComponent<Module>();
+                    var component = currentModule.GetComponent<MathModule>();
+                    component.backToMenuEvent += () => LoadMenuModule(MenuModule.Mode.ChooseMenu);
                     break;
                 case LevelModule.MatchTwo:
                     break;
@@ -51,19 +51,29 @@ namespace MiniGames.Managers
                 default:
                     break;
             }
-            await UniTask.Delay(5000, cancellationToken: cancellationToken.Token);
+            await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
             loadingScreen.StopAnimation();
             currentModule.OnLoaded();
-        }     
-
-        private void LoadMenuModule()
-        {
-
         }
 
-        private async void UnloadCurrentModule()
+        private async void LoadMenuModule(MenuModule.Mode mode)
         {
-            currentModule.Unload();
+            loadingScreen.StartAnimation();
+            UnloadCurrentModule();
+            currentModule = container.InstantiatePrefab(menuModulePrefab).GetComponent<Module>();
+            MenuModule menuComponent = currentModule.GetComponent<MenuModule>();
+            menuComponent.Initialize(mode);
+            menuComponent.ChooseMenuController.levelChosenEvent += LoadLevelModule;
+            await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
+            loadingScreen.StopAnimation();
+        }
+
+        private void UnloadCurrentModule()
+        {
+            if (currentModule != null)
+            {
+                currentModule.Unload();
+            }
         }
     }
 }

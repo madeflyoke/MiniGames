@@ -7,6 +7,9 @@ namespace MiniGames.Modules.LoadingScreen
     public class LoadingScreen : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer movingPart;
+        [SerializeField] private SpriteRenderer sky;
+        [SerializeField] private SpriteRenderer text;
+
         [SerializeField] private float speed;
         [SerializeField] private float amplitude;
         [SerializeField] private float frequency;
@@ -17,7 +20,6 @@ namespace MiniGames.Modules.LoadingScreen
         {
             cancellationToken = new CancellationTokenSource();
             mat = movingPart.material;
-            gameObject.SetActive(false);
         }
 
         public async void StartAnimation()

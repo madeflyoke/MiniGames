@@ -5,6 +5,7 @@ namespace MiniGames.Modules
 {
     public abstract class Module : MonoBehaviour
     {
+        public bool onLoaded { get; protected set; }
 
         public virtual void OnLoaded()
         {

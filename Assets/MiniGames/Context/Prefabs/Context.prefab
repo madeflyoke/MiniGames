@@ -185,5 +185,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 988c54dd33669494380d5510c07fd840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuModule: {fileID: 6704283628482079117, guid: d05ee2d054ceec444acd742b2d93ca21, type: 3}
-  mathModule: {fileID: 4898082997558555186, guid: a14da0692d179ee439ac1c772be22ca2, type: 3}
+  menuModulePrefab: {fileID: 2316266764758778410, guid: d05ee2d054ceec444acd742b2d93ca21, type: 3}
+  mathModulePrefab: {fileID: 4898082997558555188, guid: a14da0692d179ee439ac1c772be22ca2, type: 3}
+  loadingScreen: {fileID: 0}

@@ -1,9 +1,6 @@
-using MiniGames.Modules;
 using MiniGames.Modules.Level.Math;
 using MiniGames.Modules.Level.Utils;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace MiniGames.Modules.Level
@@ -36,7 +33,6 @@ namespace MiniGames.Modules.Level
         {
             backToMenuEvent?.Invoke();
         }
-
     }
 }
 

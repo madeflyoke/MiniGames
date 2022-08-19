@@ -48,9 +48,12 @@ namespace MiniGames.Modules.Level.Math
             {
                 item.SetActive(false);
             }
-            HideInstant();
         }
 
+        private void Start()
+        {
+            HideInstant();
+        }
 
         public void SetCheckMark()
         {

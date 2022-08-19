@@ -5,32 +5,53 @@ namespace MiniGames.Modules.Main.Menu
 {
     public class MenuModule : Module
     {
+        public enum Mode
+        {
+            MainMenu,
+            ChooseMenu
+        }
+
         [SerializeField] private MainMenuController mainMenuController;
-        [SerializeField] private ChooseMenuController chooseMenu;
-        public ChooseMenuController ChooseMenu => chooseMenu;
+        [SerializeField] private ChooseMenuController chooseMenuController;
+        public ChooseMenuController ChooseMenuController => chooseMenuController;
+
+        private void Awake()
+        {
+        }
 
         public override void Load()
         {
-            
+          
+        }
+
+        public void Initialize(Mode mode)
+        {
+            chooseMenuController.Initialize(mode);
+            mainMenuController.Initialize(mode);
         }
 
         private void OnEnable()
         {
-            mainMenuController.transitionOutCompleteEvent += ShowChooseMenu;
+            mainMenuController.transitionOutCompleteEvent += ChooseMenuLogic;
+            mainMenuController.transitionInCompleteEvent += MainMenuLogic;
+            chooseMenuController.backToMenuEvent += mainMenuController.StartZoomOut;
         }
+
         private void OnDisable()
         {
-            mainMenuController.transitionOutCompleteEvent -= ShowChooseMenu;
+            mainMenuController.transitionOutCompleteEvent -= ChooseMenuLogic;
+            mainMenuController.transitionInCompleteEvent -= MainMenuLogic;
+            chooseMenuController.backToMenuEvent -= mainMenuController.StartZoomOut;
         }
 
-        private void ShowChooseMenu()
+        private void ChooseMenuLogic()
         {
-            chooseMenu.Initialize();
+            chooseMenuController.Activate();
         }
 
-        private void ShowMainMenu()
+        private void MainMenuLogic()
         {
-
+            chooseMenuController.Deactivate();
         }
     }
 

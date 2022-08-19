@@ -75,6 +75,8 @@ namespace MiniGames.Modules.Level.Math
                 winEffect.Play();
                 await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy==false, cancellationToken: cancellationToken.Token);
                 scratcher.StartScratching();
+                await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
+                gameObject.SetActive(false);
                 return;
             }
             await UniTask.Delay(1500, cancellationToken: cancellationToken.Token); //time between questions
