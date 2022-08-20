@@ -3,7 +3,7 @@ public enum LevelModule
     Math,
     MatchTwo,
     ColorBuckets,
-    ChristmasTree,
+    XmasTree,
     TOTEM_UNDEFINED
 }
 

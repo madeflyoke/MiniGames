@@ -44,7 +44,7 @@ namespace MiniGames.Managers
                     break;
                 case LevelModule.ColorBuckets:
                     break;
-                case LevelModule.ChristmasTree:
+                case LevelModule.XmasTree:
                     break;
                 case LevelModule.TOTEM_UNDEFINED:
                     break;
