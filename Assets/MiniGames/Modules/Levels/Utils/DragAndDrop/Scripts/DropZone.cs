@@ -33,8 +33,7 @@ namespace MiniGames.Modules.Level.Utils
         }
 
         public void OnDrop(PointerEventData eventData)
-        {
-            
+        {        
             rectTransform.DOKill();
             rectTransform.DOScale(rectTransform.localScale / enterScale, 0.3f).endValue = defaultScale;
             
@@ -45,6 +44,7 @@ namespace MiniGames.Modules.Level.Utils
                 correctObject.transform.DOMove(transform.position, 0.2f).OnStart(() =>
                 {
                     correctAnswerEvent?.Invoke();
+                    gameObject.SetActive(false);
                 });
 
             }

@@ -1,19 +1,18 @@
 using MiniGames.Modules.Level.Utils;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using UnityEngine.UI;
 
 namespace MiniGames.Modules.Level.XmasTree
 {
     public class XmasTreeController : MonoBehaviour
     {
         [Serializable]
-        public struct Star
+        public struct StarData
         {
             public DropZone starCell;
             public Draggable starToy;
@@ -27,23 +26,45 @@ namespace MiniGames.Modules.Level.XmasTree
             public Draggable toy;
         }
 
+        [SerializeField] private XmasTreeAnimator animator;
+        [SerializeField] private ToysBagController toysBagController;
+
+        [SerializeField] private RectTransform dragPointerHelper;
         [Header("Toys And Cells")]
         [Tooltip("Star must go first and set up by player last, so done separation")]
-        [SerializeField] private Star star;
+        [SerializeField] private StarData star;
         [SerializeField] private List<Transform> toysPivots;
         [SerializeField] private List<ToyCellPair> toyCellPairs;
-        [Header("Toys Bag")]
-        [SerializeField] private Transform bagPivot;
-        [SerializeField] private Transform endRevealPivot;
+
+        public List<Transform> ToysPivots => toysPivots;
+        public StarData Star => star;
+        public List<ToyCellPair> ToyCellPairs => toyCellPairs;
+        public GraphicRaycaster Raycaster { get; private set; }
         private CancellationTokenSource cancellationToken;
-        private Vector3 bagDefaultScale;
 
         private void Awake()
         {
-            bagDefaultScale = bagPivot.localScale;
+            Raycaster = GetComponent<GraphicRaycaster>();
+            Raycaster.enabled = false;
             cancellationToken = new CancellationTokenSource();
-            SetupToysCells();
-            SetupToysBag();
+            SetupToysCells();          
+        }
+
+        private void Start()
+        {
+            animator.Initialize();
+            toysBagController.Initialize(); 
+            StartGame();
+        }
+
+        public void StartGame()
+        {
+            animator.ShowingAnimation(async () =>
+            {
+                await UniTask.Delay(200, cancellationToken: cancellationToken.Token);
+                toysBagController.ShowHelper();
+                Raycaster.enabled = true;
+            });
         }
 
         private void SetupToysCells()
@@ -53,16 +74,16 @@ namespace MiniGames.Modules.Level.XmasTree
                 item.toyCell.Initialize(item.toy);
             }
 
-            List<int> rndNumbers = new(); //pool for random numbers 
-            
+            List<int> rndNumbers = new(); //tmp pool for random numbers 
+
             for (int i = 0; i < toyCellPairs.Count; i++)
             {
                 rndNumbers.Add(i);
             }
 
-            for (int i= 0; i < toysPivots.Count; i++)
+            for (int i = 0; i < toysPivots.Count; i++)
             {
-                int rnd = rndNumbers[Random.Range(0,rndNumbers.Count)];         
+                int rnd = rndNumbers[Random.Range(0, rndNumbers.Count)];
                 toyCellPairs[rnd].toyCell.transform.SetParent(toysPivots[i]);
                 toyCellPairs[rnd].toyCell.transform.position = toysPivots[i].transform.position;
                 rndNumbers.Remove(rnd);
@@ -78,37 +99,20 @@ namespace MiniGames.Modules.Level.XmasTree
         {
             if (Input.GetKeyDown(KeyCode.S))
             {
-                ShowToy();
+                //ShowToy();
             }
         }
 
-        private void SetupToysBag()
-        {
-            foreach (var item in toyCellPairs)
-            {
-                item.toy.gameObject.SetActive(false);
-                item.toy.transform.position = bagPivot.transform.position;
-            }
-        }
 
-        private void ShowToy()
-        {
-            Sequence seq = DOTween.Sequence();
-            seq.Append(bagPivot.DOScaleX(bagDefaultScale.x * 1.1f, 0.3f))
-                .Join(bagPivot.DOScaleY(bagDefaultScale.y * 0.9f, 0.3f))
-                .Append(bagPivot.DOScaleX(bagDefaultScale.x * 0.88f, 0.2f))
-                .Join(bagPivot.DOScaleY(bagDefaultScale.y * 1.13f, 0.2f))
-                .Append(bagPivot.DOScaleX(bagDefaultScale.x, 0.8f))
-                .Join(bagPivot.DOScaleY(bagDefaultScale.y, 0.8f)).SetEase(Ease.InCubic);
-                
-           
-        }
+
+
+
 
         private void OnLastAnswerDone()
         {
 
         }
-     
+
     }
 
 }

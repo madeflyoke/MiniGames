@@ -13,19 +13,18 @@ namespace MiniGames.Modules.Level.Utils
         [SerializeField] private float returnBackTime = 0.7f;
         [HideInInspector]
         public bool selfControl;
-
-        private Image image;
+        public Image Image { get; private set; }
+        public Vector2 DefaultPos { get; set; }
         private RectTransform rectTransform;
         private Canvas canvas;
-        public Vector2 DefaultPos { get; set; }
 
         private void Awake()
         {
             selfControl = true;
-            image = GetComponent<Image>();
+            Image = GetComponent<Image>();
             rectTransform = GetComponent<RectTransform>();
             canvas = GetComponentInParent<Canvas>();
-            DefaultPos = rectTransform.anchoredPosition;
+            DefaultPos = rectTransform.position; //world pos
         }
 
 
@@ -34,8 +33,7 @@ namespace MiniGames.Modules.Level.Utils
             if (s_currentDraggable == eventData.pointerDrag)
             {
                 rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
-            }
-           
+            }         
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -43,8 +41,8 @@ namespace MiniGames.Modules.Level.Utils
             if (selfControl && s_currentDraggable == eventData.pointerDrag)
             {
                 rectTransform.DOKill();
-                rectTransform.DOAnchorPos(DefaultPos, returnBackTime).OnComplete(
-                    () => { image.raycastTarget = true; s_currentDraggable = null; });              
+                rectTransform.DOMove(DefaultPos, returnBackTime).OnComplete(
+                    () => { Image.raycastTarget = true; s_currentDraggable = null; });              
             }
         }
 
@@ -52,8 +50,9 @@ namespace MiniGames.Modules.Level.Utils
         {
             if (s_currentDraggable == null)
             {
+                rectTransform.DOKill();
                 s_currentDraggable = eventData.pointerDrag;
-                image.raycastTarget = false;
+                Image.raycastTarget = false;
             }
         }
 
@@ -65,7 +64,7 @@ namespace MiniGames.Modules.Level.Utils
         public void ResetValues()
         {
             rectTransform.anchoredPosition = DefaultPos;
-            image.raycastTarget = true;
+            Image.raycastTarget = true;
             s_currentDraggable = null;
             selfControl = true;
         }

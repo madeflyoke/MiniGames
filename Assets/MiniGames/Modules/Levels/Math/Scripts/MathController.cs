@@ -65,7 +65,6 @@ namespace MiniGames.Modules.Level.Math
         private async void CorrectAnswerLogic()
         {
             animator.SetCheckMark();
-            answerZone.gameObject.SetActive(false);
             correctAnswerEffect.Play();
             canvasRaycaster.enabled = false;
             questionsCount--;         
