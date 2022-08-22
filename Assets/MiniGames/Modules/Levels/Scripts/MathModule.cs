@@ -1,14 +1,11 @@
 using MiniGames.Modules.Level.Math;
 using MiniGames.Modules.Level.Utils;
-using System;
 using UnityEngine;
 
 namespace MiniGames.Modules.Level
 {
     public class MathModule : Module
     {
-        public event Action backToMenuEvent;
-
         [SerializeField] private MathController mathController;
         [SerializeField] private Scratcher scratcher;
 
@@ -29,9 +26,9 @@ namespace MiniGames.Modules.Level
             mathController.BackToMenuSlider.exitSliderCompleteEvent -= UnloadPreparation;
         }
 
-        private void UnloadPreparation()
+        protected override void UnloadPreparation()
         {
-            backToMenuEvent?.Invoke();
+            base.UnloadPreparation();
         }
     }
 }

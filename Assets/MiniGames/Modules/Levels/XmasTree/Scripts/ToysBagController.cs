@@ -1,7 +1,5 @@
 using DG.Tweening;
 using MiniGames.Modules.Level.Utils;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,39 +13,56 @@ namespace MiniGames.Modules.Level.XmasTree
 {
     public class ToysBagController : MonoBehaviour
     {
+        [Header("Particles")]
+        [SerializeField] private ParticleSystem pushEffect;
+        [SerializeField] private ParticleSystem correctAnswerEffectPrefab;
+        [Space]
         [SerializeField] private XmasTreeController xmasTreeController;
         [SerializeField] private Button button;
         [SerializeField] private Transform bagPointerHelper;
         [SerializeField] private RectTransform bagAnimationPivot;
         [SerializeField] private RectTransform startRevealPivot;
         [SerializeField] private RectTransform endRevealPivot;
+
         private Vector3 bagDefaultScale;
         private List<Draggable> toys;
         private XmasTreeController.StarData star;
         private CancellationTokenSource cancellationToken;
         private Draggable currentToy;
+        private Dictionary<Draggable, ParticleSystem> answersEffects; 
 
         private void Awake()
         {
             cancellationToken = new CancellationTokenSource();
             bagDefaultScale = bagAnimationPivot.localScale;
             toys = new();
+            answersEffects = new();
+            pushEffect.gameObject.SetActive(false);
         }
 
         public void Initialize()
-        {
+        {       
             foreach (var item in xmasTreeController.ToyCellPairs)
             {
                 item.toy.gameObject.SetActive(false);
                 item.toy.transform.position = startRevealPivot.transform.position;
                 item.toy.DefaultPos = endRevealPivot.position;
                 item.toyCell.correctAnswerEvent += NewToyPreparation;
+                var particle = Instantiate(correctAnswerEffectPrefab,
+                    item.toyCell.transform.position + Vector3.back * 10f, correctAnswerEffectPrefab.transform.rotation);
+                particle.gameObject.SetActive(false);
+                answersEffects[item.toy] = particle;
                 toys.Add(item.toy);
             }
             star = xmasTreeController.Star;
             star.starToy.gameObject.SetActive(false);
             star.starToy.transform.position = startRevealPivot.transform.position;
-            star.starToy.DefaultPos = endRevealPivot.anchoredPosition;
+            star.starToy.DefaultPos = endRevealPivot.position;
+            star.starCell.correctAnswerEvent += () =>
+            {
+                cancellationToken.Cancel();
+                Draggable.s_currentDraggable = null;
+            };
             button.onClick.AddListener(ButtonListener);
             bagPointerHelper.gameObject.SetActive(false);
             Shuffle(ref toys);
@@ -94,11 +109,17 @@ namespace MiniGames.Modules.Level.XmasTree
 
         private void ShowToy()
         {
-            if (toys[0] == null)
+            pushEffect.gameObject.SetActive(true);
+            pushEffect.Play();
+            if (toys.Count == 0)
             {
-                //end;
+                currentToy = star.starToy;
             }
-            currentToy = toys[0];
+            else
+            {
+                currentToy = toys[0];
+                toys.Remove(currentToy);
+            }           
             currentToy.gameObject.SetActive(true);
             currentToy.transform.DOMove(endRevealPivot.position, 0.8f).SetEase(Ease.OutBack)
                 .OnComplete(() =>
@@ -106,37 +127,32 @@ namespace MiniGames.Modules.Level.XmasTree
                     xmasTreeController.Raycaster.enabled = true;
                     SupportToyAnimation();
                 });
-            toys.Remove(currentToy);
         }
 
-        private void Update()
-        {
-            Debug.Log(Draggable.s_currentDraggable);
-        }
         private void NewToyPreparation()
-        {
+        {         
             cancellationToken.Cancel();
             cancellationToken = new CancellationTokenSource();
+            answersEffects[currentToy].gameObject.SetActive(true);
+            answersEffects[currentToy].Play();
             Draggable.s_currentDraggable = null;
             button.interactable = true; //end
         }
 
         private void SupportToyAnimation()
         {
-            currentToy.transform.DOMove(currentToy.transform.position + (currentToy.transform.up * 0.2f), 0.7f)
+            currentToy.transform.DOMove(currentToy.transform.position + (currentToy.transform.up * 0.3f), 0.6f)
                     .SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
 
             currentToy.Image.OnEndDragAsObservable().RepeatUntilDisable(this).Subscribe(async x =>
             {
-                while (Vector2.Distance(currentToy.transform.position, currentToy.DefaultPos) > 0.05f)
-                {
-                    await UniTask.Yield(cancellationToken.Token);
-                }
-                currentToy.transform.DOMove(currentToy.transform.position + (currentToy.transform.up * 0.2f), 0.7f)
+                await UniTask.WaitUntil(() => currentToy.Image.raycastTarget == true, 
+                    cancellationToken: cancellationToken.Token);
+                currentToy.transform.DOMove(currentToy.transform.position + (currentToy.transform.up * 0.3f), 0.6f)
                .SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
             }).AddTo(cancellationToken.Token);
 
         }
-    }
 
+    }
 }

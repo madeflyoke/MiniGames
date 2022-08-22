@@ -59,6 +59,7 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
             islandsPivot.DOPunchScale(Vector3.one * 0.05f, 0.3f, 5).OnComplete(() =>
             {
                 SetupIslandButton(housesIsland, LevelModule.Math);
+                SetupIslandButton(winterIsland, LevelModule.XmasTree);
             });
         }
 

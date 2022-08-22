@@ -14,7 +14,7 @@ namespace MiniGames.Modules.Level.Utils
         [HideInInspector]
         public bool selfControl;
         public Image Image { get; private set; }
-        public Vector2 DefaultPos { get; set; }
+        public Vector3 DefaultPos { get; set; }
         private RectTransform rectTransform;
         private Canvas canvas;
 
@@ -24,7 +24,7 @@ namespace MiniGames.Modules.Level.Utils
             Image = GetComponent<Image>();
             rectTransform = GetComponent<RectTransform>();
             canvas = GetComponentInParent<Canvas>();
-            DefaultPos = rectTransform.position; //world pos
+            DefaultPos = transform.position; //world pos
         }
 
 
@@ -41,7 +41,7 @@ namespace MiniGames.Modules.Level.Utils
             if (selfControl && s_currentDraggable == eventData.pointerDrag)
             {
                 rectTransform.DOKill();
-                rectTransform.DOMove(DefaultPos, returnBackTime).OnComplete(
+                transform.DOMove(DefaultPos, returnBackTime).OnComplete(
                     () => { Image.raycastTarget = true; s_currentDraggable = null; });              
             }
         }
@@ -63,7 +63,7 @@ namespace MiniGames.Modules.Level.Utils
 
         public void ResetValues()
         {
-            rectTransform.anchoredPosition = DefaultPos;
+            transform.position = DefaultPos;
             Image.raycastTarget = true;
             s_currentDraggable = null;
             selfControl = true;

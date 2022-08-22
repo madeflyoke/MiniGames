@@ -26,16 +26,20 @@ namespace MiniGames.Modules.Level.XmasTree
             public Draggable toy;
         }
 
+        [Header("Particles")]
+        [SerializeField] private ParticleSystem winEffect;
+        [SerializeField] private ParticleSystem snow;
+        [Space]
+        [SerializeField] private Scratcher scratcher;
         [SerializeField] private XmasTreeAnimator animator;
         [SerializeField] private ToysBagController toysBagController;
-
-        [SerializeField] private RectTransform dragPointerHelper;
+        [SerializeField] private BackToMenuSlider backToMenuSlider;
         [Header("Toys And Cells")]
         [Tooltip("Star must go first and set up by player last, so done separation")]
         [SerializeField] private StarData star;
         [SerializeField] private List<Transform> toysPivots;
         [SerializeField] private List<ToyCellPair> toyCellPairs;
-
+        public BackToMenuSlider BackToMenuSlider => backToMenuSlider;
         public List<Transform> ToysPivots => toysPivots;
         public StarData Star => star;
         public List<ToyCellPair> ToyCellPairs => toyCellPairs;
@@ -47,6 +51,8 @@ namespace MiniGames.Modules.Level.XmasTree
             Raycaster = GetComponent<GraphicRaycaster>();
             Raycaster.enabled = false;
             cancellationToken = new CancellationTokenSource();
+            snow.Play();
+            winEffect.gameObject.SetActive(false);
             SetupToysCells();          
         }
 
@@ -54,16 +60,16 @@ namespace MiniGames.Modules.Level.XmasTree
         {
             animator.Initialize();
             toysBagController.Initialize(); 
-            StartGame();
         }
 
         public void StartGame()
-        {
+        {          
             animator.ShowingAnimation(async () =>
             {
                 await UniTask.Delay(200, cancellationToken: cancellationToken.Token);
                 toysBagController.ShowHelper();
                 Raycaster.enabled = true;
+                backToMenuSlider.gameObject.SetActive(true);
             });
         }
 
@@ -95,24 +101,16 @@ namespace MiniGames.Modules.Level.XmasTree
             star.starCell.correctAnswerEvent += OnLastAnswerDone;
         }
 
-        private void Update()
+        private async void OnLastAnswerDone()
         {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                //ShowToy();
-            }
+            backToMenuSlider.gameObject.SetActive(false);
+            await UniTask.Delay(250, cancellationToken: cancellationToken.Token);
+            winEffect.gameObject.SetActive(true);
+            winEffect.Play();
+            await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy == false, cancellationToken: cancellationToken.Token);
+            scratcher.StartScratching();
+            await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
+            gameObject.SetActive(false);
         }
-
-
-
-
-
-
-        private void OnLastAnswerDone()
-        {
-
-        }
-
     }
-
 }

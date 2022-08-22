@@ -5,13 +5,12 @@ using MiniGames.Modules.Level.Utils;
 using Random = UnityEngine.Random;
 using Cysharp.Threading.Tasks;
 using System.Threading;
-using System;
 
 namespace MiniGames.Modules.Level.Math
 {
     public class MathController : MonoBehaviour
     {
-        [SerializeField] private float startDelay;
+        [SerializeField] private float nextQuestionDelay;
         [Tooltip("Need synchronization with check marks on screen ")]
         [SerializeField] private int questionsCount;
         [SerializeField] private Scratcher scratcher;
@@ -41,9 +40,8 @@ namespace MiniGames.Modules.Level.Math
             winEffect.transform.position = Vector3.zero + (Vector3.forward * 5);
         }
 
-        public async void StartGame()
+        public void StartGame()
         {
-            await UniTask.Delay((int)(startDelay * 1000), cancellationToken: cancellationToken.Token);
             question.SetupQuestion(() => animator.ShowingAnimation(() => {
                 canvasRaycaster.enabled = true;
                 backToMenuSlider.gameObject.SetActive(true);
@@ -82,7 +80,7 @@ namespace MiniGames.Modules.Level.Math
             animator.HidingAnimation(async() =>
             {
                 answerZone.gameObject.SetActive(true);
-                await UniTask.Delay((int)(startDelay * 1000), cancellationToken: cancellationToken.Token);
+                await UniTask.Delay((int)(nextQuestionDelay * 1000), cancellationToken: cancellationToken.Token);
                 question.SetupQuestion(
                 () => animator.ShowingAnimation(
                     () => canvasRaycaster.enabled = true));

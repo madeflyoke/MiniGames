@@ -1,5 +1,4 @@
 using MiniGames.Modules;
-using MiniGames.Modules.Level;
 using MiniGames.Modules.LoadingScreen;
 using MiniGames.Modules.Main.Menu;
 using UnityEngine;
@@ -15,6 +14,7 @@ namespace MiniGames.Managers
 
         [SerializeField] private GameObject menuModulePrefab;
         [SerializeField] private GameObject mathModulePrefab;
+        [SerializeField] private GameObject xmasTreeModulePrefab;
         [SerializeField] private LoadingScreen loadingScreen;
         private Module currentModule;
         private CancellationTokenSource cancellationToken;
@@ -37,20 +37,21 @@ namespace MiniGames.Managers
             {
                 case LevelModule.Math:
                     currentModule = container.InstantiatePrefab(mathModulePrefab.gameObject).GetComponent<Module>();
-                    var component = currentModule.GetComponent<MathModule>();
-                    component.backToMenuEvent += () => LoadMenuModule(MenuModule.Mode.ChooseMenu);
                     break;
                 case LevelModule.MatchTwo:
                     break;
                 case LevelModule.ColorBuckets:
                     break;
                 case LevelModule.XmasTree:
+                    currentModule = container.InstantiatePrefab(xmasTreeModulePrefab.gameObject).GetComponent<Module>();
                     break;
                 case LevelModule.TOTEM_UNDEFINED:
                     break;
                 default:
                     break;
             }
+            var component = currentModule.GetComponent<Module>();
+            component.backToMenuEvent += () => LoadMenuModule(MenuModule.Mode.ChooseMenu);
             await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
             loadingScreen.StopAnimation();
             currentModule.OnLoaded();

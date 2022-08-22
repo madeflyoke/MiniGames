@@ -1,35 +1,34 @@
 using MiniGames.Modules.Level.Utils;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using MiniGames.Modules.Level.XmasTree;
 using UnityEngine;
 
 namespace MiniGames.Modules.Level
 {
     public class XmasTreeModule : Module
     {
-        public event Action backToMenuEvent;
-
         [SerializeField] private Scratcher scratcher;
+        [SerializeField] private XmasTreeController xmasTreeController;
 
         public override void OnLoaded()
         {
             base.OnLoaded();
-            //mathController.StartGame();
+            xmasTreeController.StartGame();
         }
 
         private void OnEnable()
         {
+            xmasTreeController.BackToMenuSlider.exitSliderCompleteEvent += UnloadPreparation;
             scratcher.exitButtonPressedEvent += UnloadPreparation;
         }
         private void OnDisable()
         {
             scratcher.exitButtonPressedEvent -= UnloadPreparation;
+            xmasTreeController.BackToMenuSlider.exitSliderCompleteEvent -= UnloadPreparation;
         }
 
-        private void UnloadPreparation()
+        protected override void UnloadPreparation()
         {
-            backToMenuEvent?.Invoke();
+            base.UnloadPreparation();
         }
     }
 
