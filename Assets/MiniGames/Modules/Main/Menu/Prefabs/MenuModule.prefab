@@ -1131,6 +1131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14647414de8e49e449714fa97032ad08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startGameDelay: 0
   mainMenuController: {fileID: 2316266765093450232}
   chooseMenuController: {fileID: 2316266764292634509}
 --- !u!1 &2316266764936041624
@@ -1182,7 +1183,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2316266765093450233
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2477,7 +2478,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8794351073966999706, guid: cbaa3c58fb8236e4087df1c787e0ffa3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 18.29
+      value: 19.03
       objectReference: {fileID: 0}
     - target: {fileID: 8794351073966999706, guid: cbaa3c58fb8236e4087df1c787e0ffa3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2514,6 +2515,10 @@ PrefabInstance:
     - target: {fileID: 8794351073967281678, guid: cbaa3c58fb8236e4087df1c787e0ffa3, type: 3}
       propertyPath: m_Name
       value: SnowLight
+      objectReference: {fileID: 0}
+    - target: {fileID: 8794351073967281678, guid: cbaa3c58fb8236e4087df1c787e0ffa3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cbaa3c58fb8236e4087df1c787e0ffa3, type: 3}

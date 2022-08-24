@@ -20606,6 +20606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 047bfb88d20519c4a8b92af18a72a890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startGameDelay: 1
   mathController: {fileID: 6318234484549360921}
   scratcher: {fileID: 6318234483869290179}
 --- !u!1 &6318234483774351674
@@ -22057,8 +22058,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8d07155a1be10b46bbcdaff1e96e61e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startDelay: 1.7
-  questionsCount: 1
+  nextQuestionDelay: 1
+  questionsCount: 6
   scratcher: {fileID: 6318234483869290179}
   backToMenuSlider: {fileID: 6318234484009465481}
   correctAnswerEffect: {fileID: 2478940941369328229}

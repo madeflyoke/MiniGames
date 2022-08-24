@@ -119,7 +119,8 @@ namespace MiniGames.Modules.Level.XmasTree
             {
                 currentToy = toys[0];
                 toys.Remove(currentToy);
-            }           
+            }
+            currentToy.transform.SetAsLastSibling();
             currentToy.gameObject.SetActive(true);
             currentToy.transform.DOMove(endRevealPivot.position, 0.8f).SetEase(Ease.OutBack)
                 .OnComplete(() =>
@@ -150,8 +151,23 @@ namespace MiniGames.Modules.Level.XmasTree
                     cancellationToken: cancellationToken.Token);
                 currentToy.transform.DOMove(currentToy.transform.position + (currentToy.transform.up * 0.3f), 0.6f)
                .SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
-            }).AddTo(cancellationToken.Token);
+            }).AddTo(cancellationToken.Token);        
+        }
 
+        private void OnDestroy()
+        {
+            foreach (var item in answersEffects)
+            {
+                Destroy(item.Value.gameObject);
+            }
+            bagPointerHelper.DOKill();
+            if (currentToy!=null)
+            {
+                currentToy.transform.DOKill();
+
+            }
+            cancellationToken.Cancel();
+            Draggable.s_currentDraggable = null;
         }
 
     }

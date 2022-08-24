@@ -1,7 +1,5 @@
 using System;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
-using System.Threading;
 
 namespace MiniGames.Modules
 {
@@ -10,18 +8,11 @@ namespace MiniGames.Modules
         public event Action backToMenuEvent;
 
         [Header("Module")]
-        [SerializeField] private float startGameDelay;
-        protected CancellationTokenSource cancellationToken;
+        [SerializeField] protected float startGameDelay;
 
-        public virtual async void OnLoaded()
-        {
-            await UniTask.Delay((int)(startGameDelay * 1000), cancellationToken: cancellationToken.Token);
-        }
+        public virtual void OnLoaded() { }
 
-        public virtual void Load()
-        {
-
-        }      
+        public virtual void Load() { }      
 
         protected virtual void UnloadPreparation()
         {

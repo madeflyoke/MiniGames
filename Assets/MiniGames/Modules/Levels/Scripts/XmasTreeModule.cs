@@ -1,6 +1,8 @@
 using MiniGames.Modules.Level.Utils;
 using MiniGames.Modules.Level.XmasTree;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 namespace MiniGames.Modules.Level
 {
@@ -8,10 +10,13 @@ namespace MiniGames.Modules.Level
     {
         [SerializeField] private Scratcher scratcher;
         [SerializeField] private XmasTreeController xmasTreeController;
+        private CancellationTokenSource cancellationToken;
 
-        public override void OnLoaded()
+        public override async void OnLoaded()
         {
             base.OnLoaded();
+            cancellationToken = new CancellationTokenSource();
+            await UniTask.Delay((int)(startGameDelay * 1000), cancellationToken: cancellationToken.Token);
             xmasTreeController.StartGame();
         }
 

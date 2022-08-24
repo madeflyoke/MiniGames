@@ -84,6 +84,14 @@ namespace MiniGames.Modules.Level.Utils
 
         public Vector2 GetOriginalWidthHeight(Texture2D texture)
         {
+            if (spriteSizes==null) //safety way
+            {
+                string text = File.ReadAllText(Application.dataPath + "/SpritesSizeData.json");
+
+                SpriteSizesData data = JsonConvert.DeserializeObject<SpriteSizesData>(text);
+                return new Vector2(data.spriteSizes[texture.name].x, data.spriteSizes[texture.name].y);
+            }
+            else
             return new Vector2(spriteSizes[texture.name].x, spriteSizes[texture.name].y);
         }
 

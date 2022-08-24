@@ -113,7 +113,6 @@ namespace MiniGames.Modules.Level.Utils
 
                 if (resultArray[1]<=spritePixels.Length*currentImageFilnessErorr/100)
                 {
-                    Debug.Log("end");
                     fillingCompleteEvent?.Invoke();
                     targetSpritePixels.Dispose();
                     resultArray.Dispose();

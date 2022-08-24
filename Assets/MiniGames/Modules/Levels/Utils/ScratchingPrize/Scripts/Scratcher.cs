@@ -39,7 +39,7 @@ namespace MiniGames.Modules.Level.Utils
         private bool canScratch;
 
         private void Awake()
-        {    
+        {
             exitButton.transform.parent.gameObject.SetActive(false);
             mainCam = Camera.main;
             renderTextureCam.transform.position = new Vector3(0, 0, trailPrefab.transform.position.z - 5);
@@ -54,7 +54,6 @@ namespace MiniGames.Modules.Level.Utils
         private void Initialize()
         {
             Sprite sprite = targetSr.sprite;
-
             Vector2 worldMainTextureCenter = new Vector2(sprite.texture.width / 2, sprite.texture.height / 2) / 100;
             Vector2 worldSpriteCenter = sprite.rect.center / 100;
             Vector2 size = spritesOriginalSizes.GetOriginalWidthHeight(sprite.texture);
