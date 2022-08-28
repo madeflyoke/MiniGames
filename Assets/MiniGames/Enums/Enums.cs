@@ -1,4 +1,4 @@
-public enum LevelModule
+public enum LevelType
 {
     Math,
     MatchTwo,

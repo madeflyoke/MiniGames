@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -27,6 +26,10 @@ namespace MiniGames.Modules.Level.MatchTwo
 
         public void Awake()
         {
+            foreach (var item in checkMarks)
+            {
+                item.SetActive(false);
+            }
             defaultPivotsValues = new();
             foreach (var item in orderedPivots)
             {
@@ -35,11 +38,7 @@ namespace MiniGames.Modules.Level.MatchTwo
         }
 
         public void ShowStartAnimation(Action onComplete)
-        {
-            foreach (var item in checkMarks)
-            {
-                item.SetActive(false);
-            }
+        {          
             Sequence seq = DOTween.Sequence();
             for (int i = 0; i < orderedPivots.Count; i++)
             {

@@ -8,7 +8,7 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
     public class ChooseMenuController : MonoBehaviour
     {
         public event Action backToMenuEvent;
-        public event Action<LevelModule> levelChosenEvent;
+        public event Action<LevelType> levelChosenEvent;
 
         [SerializeField] private Button mainMenuButton;
 
@@ -55,11 +55,12 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
                 mainMenuButton.interactable = true;
                 mainMenuButton.onClick.AddListener(MainMenuButtonListener);
             });
-        StartAnimationIslands();
-            islandsPivot.DOPunchScale(Vector3.one * 0.05f, 0.3f, 5).OnComplete(() =>
+            StartAnimationIslands();
+            islandsPivot.DOPunchScale(Vector3.one * 0.05f, 0.3f, 5).OnComplete(() => //set level types to islands here
             {
-                SetupIslandButton(housesIsland, LevelModule.Math);
-                SetupIslandButton(winterIsland, LevelModule.XmasTree);
+                SetupIslandButton(housesIsland, LevelType.Math);
+                SetupIslandButton(winterIsland, LevelType.XmasTree);
+                SetupIslandButton(caseIsland, LevelType.MatchTwo);
             });
         }
 
@@ -67,11 +68,8 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
         {
             mainMenuButton.interactable = false;
             RemoveButtonsListeners();
-            mainMenuButton.transform.DOPunchScale(Vector3.one * 0.1f, 0.4f).OnComplete(() =>
-            {
-                mainMenuButton.gameObject.SetActive(false);
-                backToMenuEvent?.Invoke();
-            });
+            mainMenuButton.gameObject.SetActive(false);
+            backToMenuEvent?.Invoke();
             TurnOffIslands();
         }
 
@@ -106,7 +104,7 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
 
 
 
-        private void SetupIslandButton(Island island, LevelModule levelType)
+        private void SetupIslandButton(Island island, LevelType levelType)
         {
             island.Button.onClick.AddListener(() =>
             {

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,19 +5,25 @@ using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using DG.Tweening;
-using System;
+using MiniGames.Modules.Level.Utils;
 
 namespace MiniGames.Modules.Level.MatchTwo
 {
     public class MatchTwoController : MonoBehaviour
     {
-        [SerializeField] private ParticleSystem choiceEffectPrefab;
+        [SerializeField] private Scratcher scratcher;
         [SerializeField] private MatchTwoAnimator animator;
+        [SerializeField] private BackToMenuSlider backToMenuSlider;
+        [Space]
+        [SerializeField] private ParticleSystem winEffect;
+        [SerializeField] private ParticleSystem choiceEffectPrefab;
+        [Tooltip("Set value manually depends on items formation i.e. rows, columns, overall items count etc.")]
         [SerializeField] private int levelsCount;
         [SerializeField] private Transform pairArrivePivot;
         [SerializeField] private Transform suitcase;
         [SerializeField] private List<Sprite> items;
         [SerializeField] private List<Image> itemsPivots;
+        public BackToMenuSlider BackToMenuSlider => backToMenuSlider;
         private int currentLevelIndex;
         private GraphicRaycaster raycaster;
         private Image currentSelectable;
@@ -30,6 +35,7 @@ namespace MiniGames.Modules.Level.MatchTwo
 
         private void Awake()
         {
+            winEffect.gameObject.SetActive(false);
             choiceParticles = new ParticleSystem[2];
             defaultParticlesScales = new();
             for (int i = 0; i < choiceParticles.Length; i++)
@@ -50,14 +56,15 @@ namespace MiniGames.Modules.Level.MatchTwo
             SetupButtons();
             currentLevelIndex = 0;
             Shuffle(ref items);
-            SetupItems();
         }
 
-        private void Start()
+        public void StartGame()
         {
+            SetupItems();
             animator.ShowStartAnimation(() =>
             {
                 raycaster.enabled = true;
+                backToMenuSlider.gameObject.SetActive(true);
             });
         }
 
@@ -102,7 +109,12 @@ namespace MiniGames.Modules.Level.MatchTwo
             currentLevelIndex++;
             if (currentLevelIndex >= levelsCount)
             {
-                Debug.Log("endgame");
+                winEffect.gameObject.SetActive(true);
+                winEffect.Play();
+                await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy == false, cancellationToken: cancellationToken.Token);
+                scratcher.StartScratching();
+                await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
+                gameObject.SetActive(false);
                 return;
             }
             answersPerLevel = itemsPivots.Count / 2;
@@ -176,9 +188,8 @@ namespace MiniGames.Modules.Level.MatchTwo
                                return;
                            }
                            raycaster.enabled = true;
-                       }).SetDelay(0.5f);
+                       }).SetDelay(0.3f);
                 });
-                Debug.Log("yes");
             }
             else //if second selected different from first
             {
@@ -192,7 +203,6 @@ namespace MiniGames.Modules.Level.MatchTwo
                         currentSelectable = null;
                         raycaster.enabled = true;
                     });
-                Debug.Log("no");
             }
         }
 
@@ -200,6 +210,22 @@ namespace MiniGames.Modules.Level.MatchTwo
         {
             System.Random rnd = new();
             list = list.OrderBy(x => rnd.Next()).ToList();
+        }
+
+        private void OnDestroy()
+        {
+            if (cancellationToken!=null)
+            {
+                cancellationToken.Cancel();
+            }
+            foreach (var itemPivot in itemsPivots)
+            {
+                itemPivot.transform.DOKill();
+            }
+            foreach (var item in choiceParticles)
+            {
+                Destroy(item.gameObject);
+            }
         }
     }
 }

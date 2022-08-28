@@ -13,6 +13,8 @@ namespace MiniGames.Modules.Main.Menu
         public event Action transitionInCompleteEvent;
 
         [SerializeField] private Button playButton;
+        [SerializeField] private Button exitButton;
+        [SerializeField] private PrizesController prizesController;
         [Header("Transition/Zoom")]
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private Transform zoomPivot;
@@ -38,6 +40,7 @@ namespace MiniGames.Modules.Main.Menu
         {
             skyMat = skyClouds.material;
             cancellationToken = new CancellationTokenSource();
+            exitButton.onClick.AddListener(Application.Quit);
         }
 
         public void Initialize(MenuModule.Mode mode)
@@ -66,6 +69,8 @@ namespace MiniGames.Modules.Main.Menu
 
         private async void StartZoomIn()
         {
+            exitButton.gameObject.SetActive(false);
+            prizesController.gameObject.SetActive(false);
             playButton.gameObject.SetActive(false);
             waterVfx.Stop();
             waterVfx.gameObject.SetActive(false);
@@ -79,7 +84,8 @@ namespace MiniGames.Modules.Main.Menu
         }
 
         public async void StartZoomOut()
-        {          
+        {
+            await UniTask.Delay(100, cancellationToken: cancellationToken.Token);
             zoomPivot.gameObject.SetActive(true);
             gameObject.SetActive(true);
             canAnimate = true;
@@ -92,6 +98,8 @@ namespace MiniGames.Modules.Main.Menu
             transitionInCompleteEvent?.Invoke();
             playButton.transform.localScale = Vector3.one;
             playButton.gameObject.SetActive(true);
+            prizesController.gameObject.SetActive(true);
+            exitButton.gameObject.SetActive(true);
         }
 
         private void ZoomInPreparation()

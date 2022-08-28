@@ -27,7 +27,7 @@ namespace MiniGames.Modules.LoadingScreen
             gameObject.SetActive(true);
             while (true)
             {
-                mat.mainTextureOffset += Vector2.right * speed * Time.deltaTime;
+                mat.mainTextureOffset += Vector2.left * speed * Time.deltaTime;
                 mat.mainTextureOffset = new Vector2(mat.mainTextureOffset.x, Mathf.Sin(Time.time * frequency) * amplitude);
                 await UniTask.Yield(cancellationToken.Token);
             }
@@ -35,11 +35,15 @@ namespace MiniGames.Modules.LoadingScreen
 
         public void StopAnimation()
         {
-            cancellationToken.Cancel();
+            if (cancellationToken !=null)
+            {
+               cancellationToken.Cancel();
+            }
             cancellationToken = new CancellationTokenSource();
-            mat.mainTextureOffset = Vector2.zero;
+            mat.mainTextureOffset = Vector3.zero;
             gameObject.SetActive(false);
         }
+
     }
 }
 

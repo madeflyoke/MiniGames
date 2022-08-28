@@ -15,6 +15,7 @@ namespace MiniGames.Managers
         [SerializeField] private GameObject menuModulePrefab;
         [SerializeField] private GameObject mathModulePrefab;
         [SerializeField] private GameObject xmasTreeModulePrefab;
+        [SerializeField] private GameObject matchTwoModulePrefab;
         [SerializeField] private LoadingScreen loadingScreen;
         private Module currentModule;
         private CancellationTokenSource cancellationToken;
@@ -29,23 +30,24 @@ namespace MiniGames.Managers
             LoadMenuModule(MenuModule.Mode.MainMenu);
         }
 
-        private async void LoadLevelModule(LevelModule levelType)
+        private async void LoadLevelModule(LevelType levelType)
         {
             loadingScreen.StartAnimation();
             UnloadCurrentModule();
             switch (levelType)
             {
-                case LevelModule.Math:
+                case LevelType.Math:
                     currentModule = container.InstantiatePrefab(mathModulePrefab.gameObject).GetComponent<Module>();
                     break;
-                case LevelModule.MatchTwo:
+                case LevelType.MatchTwo:
+                    currentModule = container.InstantiatePrefab(matchTwoModulePrefab.gameObject).GetComponent<Module>();
                     break;
-                case LevelModule.ColorBuckets:
+                case LevelType.ColorBuckets:
                     break;
-                case LevelModule.XmasTree:
+                case LevelType.XmasTree:
                     currentModule = container.InstantiatePrefab(xmasTreeModulePrefab.gameObject).GetComponent<Module>();
                     break;
-                case LevelModule.TOTEM_UNDEFINED:
+                case LevelType.TOTEM_UNDEFINED:
                     break;
                 default:
                     break;
