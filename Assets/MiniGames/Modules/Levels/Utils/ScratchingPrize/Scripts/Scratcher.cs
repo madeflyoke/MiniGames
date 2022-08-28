@@ -14,7 +14,7 @@ namespace MiniGames.Modules.Level.Utils
 
         private const string rtTexture = "_DrawTexture";
 
-        public event Action startTouching;
+        public event Action startTouchingEvent;
         public event Action exitButtonPressedEvent;
 
         [Header("Utils")]
@@ -138,7 +138,7 @@ namespace MiniGames.Modules.Level.Utils
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     SetTrail();
-                    startTouching?.Invoke();
+                    startTouchingEvent?.Invoke();
                 }
                 else if (Input.GetKeyUp(KeyCode.Mouse0))
                 {

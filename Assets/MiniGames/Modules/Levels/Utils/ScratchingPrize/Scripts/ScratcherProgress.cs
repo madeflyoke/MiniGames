@@ -80,11 +80,11 @@ namespace MiniGames.Modules.Level.Utils
 
         private void OnEnable()
         {
-            scratcher.startTouching += CheckProgress;
+            scratcher.startTouchingEvent += CheckProgress;
         }
         private void OnDisable()
         {
-            scratcher.startTouching -= CheckProgress;
+            scratcher.startTouchingEvent -= CheckProgress;
         }
 
         [BurstCompile]

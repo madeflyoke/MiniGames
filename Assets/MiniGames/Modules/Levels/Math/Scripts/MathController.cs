@@ -8,13 +8,11 @@ using System.Threading;
 
 namespace MiniGames.Modules.Level.Math
 {
-    public class MathController : MonoBehaviour
+    public class MathController : LevelController
     {
         [SerializeField] private float nextQuestionDelay;
         [Tooltip("Need synchronization with check marks on screen ")]
         [SerializeField] private int questionsCount;
-        [SerializeField] private Scratcher scratcher;
-        [SerializeField] private BackToMenuSlider backToMenuSlider;
 
         [Header("VFX")]
         [SerializeField] private ParticleSystem correctAnswerEffect;
@@ -25,7 +23,6 @@ namespace MiniGames.Modules.Level.Math
         [SerializeField] private MathQuestion question;
         [SerializeField] private DropZone answerZone;
         [SerializeField] private MathAnimator animator;
-        public BackToMenuSlider BackToMenuSlider => backToMenuSlider;
         private GraphicRaycaster canvasRaycaster;
         private List<int> poolOfNumbers;
         private CancellationTokenSource cancellationToken;
@@ -40,7 +37,7 @@ namespace MiniGames.Modules.Level.Math
             winEffect.transform.position = Vector3.zero + (Vector3.forward * 5);
         }
 
-        public void StartGame()
+        public override void StartGame()
         {
             question.SetupQuestion(() => animator.ShowingAnimation(() => {
                 canvasRaycaster.enabled = true;
@@ -49,13 +46,15 @@ namespace MiniGames.Modules.Level.Math
             questionsCount--;
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             question.questionReadyEvent += SetupVariants;
             answerZone.correctAnswerEvent += CorrectAnswerLogic;
         }
-        private void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
             question.questionReadyEvent -= SetupVariants;
             answerZone.correctAnswerEvent -= CorrectAnswerLogic;
         }
@@ -118,7 +117,6 @@ namespace MiniGames.Modules.Level.Math
         {
             Draggable.s_currentDraggable = null;
         }
-
     }
 }
 

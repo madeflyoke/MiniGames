@@ -20565,7 +20565,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6318234483695409169}
-  - component: {fileID: 6318234483695409168}
+  - component: {fileID: 6442011305681695662}
   m_Layer: 0
   m_Name: MathModulePrefab
   m_TagString: Untagged
@@ -20594,7 +20594,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6318234483695409168
+--- !u!114 &6442011305681695662
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20603,12 +20603,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6318234483695409174}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 047bfb88d20519c4a8b92af18a72a890, type: 3}
+  m_Script: {fileID: 11500000, guid: 56c9018729aedb6468350bcfcea4773a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   startGameDelay: 1
-  mathController: {fileID: 6318234484549360921}
-  scratcher: {fileID: 6318234483869290179}
+  levelController: {fileID: 6318234484549360921}
 --- !u!1 &6318234483774351674
 GameObject:
   m_ObjectHideFlags: 0
@@ -22058,10 +22057,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8d07155a1be10b46bbcdaff1e96e61e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextQuestionDelay: 1
-  questionsCount: 6
   scratcher: {fileID: 6318234483869290179}
   backToMenuSlider: {fileID: 6318234484009465481}
+  nextQuestionDelay: 1
+  questionsCount: 6
   correctAnswerEffect: {fileID: 2478940941369328229}
   winEffect: {fileID: 428458454605967827}
   answers:
@@ -23633,18 +23632,6 @@ PrefabInstance:
     - target: {fileID: 8136293555902432609, guid: 6708fed8cec59404a8f11899a7784eb0, type: 3}
       propertyPath: m_RootOrder
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8136293555902432609, guid: 6708fed8cec59404a8f11899a7784eb0, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8136293555902432609, guid: 6708fed8cec59404a8f11899a7784eb0, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8136293555902432609, guid: 6708fed8cec59404a8f11899a7784eb0, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.8
       objectReference: {fileID: 0}
     - target: {fileID: 8136293555902432609, guid: 6708fed8cec59404a8f11899a7784eb0, type: 3}
       propertyPath: m_LocalPosition.x

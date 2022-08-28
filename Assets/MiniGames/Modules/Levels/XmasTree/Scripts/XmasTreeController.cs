@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace MiniGames.Modules.Level.XmasTree
 {
-    public class XmasTreeController : MonoBehaviour
+    public class XmasTreeController : LevelController
     {
         [Serializable]
         public struct StarData
@@ -30,16 +30,13 @@ namespace MiniGames.Modules.Level.XmasTree
         [SerializeField] private ParticleSystem winEffect;
         [SerializeField] private ParticleSystem snow;
         [Space]
-        [SerializeField] private Scratcher scratcher;
         [SerializeField] private XmasTreeAnimator animator;
         [SerializeField] private ToysBagController toysBagController;
-        [SerializeField] private BackToMenuSlider backToMenuSlider;
         [Header("Toys And Cells")]
         [Tooltip("Star must go first and set up by player last, so done separation")]
         [SerializeField] private StarData star;
         [SerializeField] private List<Transform> toysPivots;
         [SerializeField] private List<ToyCellPair> toyCellPairs;
-        public BackToMenuSlider BackToMenuSlider => backToMenuSlider;
         public List<Transform> ToysPivots => toysPivots;
         public StarData Star => star;
         public List<ToyCellPair> ToyCellPairs => toyCellPairs;
@@ -62,8 +59,8 @@ namespace MiniGames.Modules.Level.XmasTree
             toysBagController.Initialize(); 
         }
 
-        public void StartGame()
-        {          
+        public override void StartGame()
+        {
             animator.ShowingAnimation(async () =>
             {
                 await UniTask.Delay(200, cancellationToken: cancellationToken.Token);

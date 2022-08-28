@@ -5,15 +5,12 @@ using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using DG.Tweening;
-using MiniGames.Modules.Level.Utils;
 
 namespace MiniGames.Modules.Level.MatchTwo
 {
-    public class MatchTwoController : MonoBehaviour
+    public class MatchTwoController : LevelController
     {
-        [SerializeField] private Scratcher scratcher;
         [SerializeField] private MatchTwoAnimator animator;
-        [SerializeField] private BackToMenuSlider backToMenuSlider;
         [Space]
         [SerializeField] private ParticleSystem winEffect;
         [SerializeField] private ParticleSystem choiceEffectPrefab;
@@ -23,7 +20,6 @@ namespace MiniGames.Modules.Level.MatchTwo
         [SerializeField] private Transform suitcase;
         [SerializeField] private List<Sprite> items;
         [SerializeField] private List<Image> itemsPivots;
-        public BackToMenuSlider BackToMenuSlider => backToMenuSlider;
         private int currentLevelIndex;
         private GraphicRaycaster raycaster;
         private Image currentSelectable;
@@ -58,7 +54,7 @@ namespace MiniGames.Modules.Level.MatchTwo
             Shuffle(ref items);
         }
 
-        public void StartGame()
+        public override void StartGame()
         {
             SetupItems();
             animator.ShowStartAnimation(() =>

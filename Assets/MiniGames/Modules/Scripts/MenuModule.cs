@@ -1,7 +1,8 @@
+using MiniGames.Modules.Main.Menu;
 using MiniGames.Modules.Main.Menu.ChooseMenu;
 using UnityEngine;
 
-namespace MiniGames.Modules.Main.Menu
+namespace MiniGames.Modules
 {
     public class MenuModule : Module
     {
@@ -14,15 +15,6 @@ namespace MiniGames.Modules.Main.Menu
         [SerializeField] private MainMenuController mainMenuController;
         [SerializeField] private ChooseMenuController chooseMenuController;
         public ChooseMenuController ChooseMenuController => chooseMenuController;
-
-        private void Awake()
-        {
-        }
-
-        public override void Load()
-        {
-          
-        }
 
         public void Initialize(Mode mode)
         {

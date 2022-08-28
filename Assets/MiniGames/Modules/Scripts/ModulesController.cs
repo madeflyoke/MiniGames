@@ -1,6 +1,5 @@
 using MiniGames.Modules;
 using MiniGames.Modules.LoadingScreen;
-using MiniGames.Modules.Main.Menu;
 using UnityEngine;
 using Zenject;
 using Cysharp.Threading.Tasks;
@@ -52,11 +51,12 @@ namespace MiniGames.Managers
                 default:
                     break;
             }
-            var component = currentModule.GetComponent<Module>();
+            LevelModule component = (LevelModule)currentModule;
+            Debug.Log(component == null);
             component.backToMenuEvent += () => LoadMenuModule(MenuModule.Mode.ChooseMenu);
             await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
             loadingScreen.StopAnimation();
-            currentModule.OnLoaded();
+            component.OnLoaded();
         }
 
         private async void LoadMenuModule(MenuModule.Mode mode)
