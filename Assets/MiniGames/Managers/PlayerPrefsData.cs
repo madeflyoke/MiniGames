@@ -22,7 +22,7 @@ namespace MiniGames.Managers
             }
         }
 
-        public void SaveFirstLevelComplition(LevelType levelType)
+        public void SaveFirstComplition(LevelType levelType)
         {
             PlayerPrefs.SetInt(levelType.ToString(), 1);
             IsLevelCompletedOnce[levelType] = true;

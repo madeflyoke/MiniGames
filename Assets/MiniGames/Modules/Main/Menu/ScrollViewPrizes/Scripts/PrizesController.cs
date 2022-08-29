@@ -11,7 +11,6 @@ namespace MiniGames.Modules.Main.Menu
     public class PrizesController : MonoBehaviour
     {
         [Inject] private PlayerPrefsData playerPrefsData;
-        //[SerializeField] private List<>
 
         [Serializable]
         public struct PrizeByLevel

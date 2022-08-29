@@ -77,7 +77,7 @@ TrailRenderer:
   m_Time: Infinity
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 4
+    widthMultiplier: 3.5
     widthCurve:
       serializedVersion: 2
       m_Curve:

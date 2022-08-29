@@ -52,8 +52,8 @@ namespace MiniGames.Managers
                     break;
             }
             LevelModule component = (LevelModule)currentModule;
-            Debug.Log(component == null);
-            component.backToMenuEvent += () => LoadMenuModule(MenuModule.Mode.ChooseMenu);
+            component.LevelController.Initialize(levelType);
+            component.backToMenuEvent += () => LoadMenuModule(MenuModule.Mode.ChooseMenu);            
             await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
             loadingScreen.StopAnimation();
             component.OnLoaded();

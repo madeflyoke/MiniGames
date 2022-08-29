@@ -40,7 +40,6 @@ namespace MiniGames.Modules.Main.Menu
         {
             skyMat = skyClouds.material;
             cancellationToken = new CancellationTokenSource();
-            exitButton.onClick.AddListener(Application.Quit);
         }
 
         public void Initialize(MenuModule.Mode mode)
@@ -106,6 +105,8 @@ namespace MiniGames.Modules.Main.Menu
         {
             zoomPivot.gameObject.SetActive(true);
             playButton.gameObject.SetActive(true);
+            exitButton.gameObject.SetActive(true);
+            prizesController.gameObject.SetActive(true);
             gameObject.SetActive(true);
             waterVfx.gameObject.SetActive(true);
             waterVfx.Play();
@@ -119,6 +120,8 @@ namespace MiniGames.Modules.Main.Menu
             transform.localScale = Vector3.one * endZoomValue;
             zoomPivot.gameObject.SetActive(false);
             playButton.gameObject.SetActive(false);
+            exitButton.gameObject.SetActive(false);
+            prizesController.gameObject.SetActive(false);
             waterVfx.gameObject.SetActive(false);
             waterVfx.Stop();
             canAnimate = false;
@@ -133,12 +136,14 @@ namespace MiniGames.Modules.Main.Menu
                 playButton.transform.DOPunchScale(Vector3.one*0.1f,0.2f).OnComplete(()=>
                 playButton.transform.DOScale(0, 0.1f).OnComplete(() => StartZoomIn()));
             });
+            exitButton.onClick.AddListener(Application.Quit);
         }
         private void OnDisable()
         {
             cancellationToken.Cancel();
             cancellationToken = new CancellationTokenSource();
             playButton.onClick.RemoveAllListeners();
+            exitButton.onClick.RemoveAllListeners();
             skyMat.mainTextureOffset = Vector2.zero;
         }
     }

@@ -5,12 +5,14 @@ using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using DG.Tweening;
+using MiniGames.Modules.Level.Utils;
 
 namespace MiniGames.Modules.Level.MatchTwo
 {
     public class MatchTwoController : LevelController
     {
         [SerializeField] private MatchTwoAnimator animator;
+        [SerializeField] private ScratchAgainButton scratchAgainButton;
         [Space]
         [SerializeField] private ParticleSystem winEffect;
         [SerializeField] private ParticleSystem choiceEffectPrefab;
@@ -87,7 +89,6 @@ namespace MiniGames.Modules.Level.MatchTwo
                 itemPivot.name = itemPivot.sprite.name;
                 index++;
             }
-
         }
 
         private void SetupButtons()
@@ -103,14 +104,9 @@ namespace MiniGames.Modules.Level.MatchTwo
             itemsPivots[0].transform.parent.gameObject.SetActive(false);
             animator.SetCheckMark();
             currentLevelIndex++;
-            if (currentLevelIndex >= levelsCount)
+            if (currentLevelIndex >= levelsCount) //end
             {
-                winEffect.gameObject.SetActive(true);
-                winEffect.Play();
-                await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy == false, cancellationToken: cancellationToken.Token);
-                scratcher.StartScratching();
-                await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
-                gameObject.SetActive(false);
+                EndLogic();
                 return;
             }
             answersPerLevel = itemsPivots.Count / 2;
@@ -202,6 +198,25 @@ namespace MiniGames.Modules.Level.MatchTwo
             }
         }
 
+        private async void EndLogic()
+        {
+            if (isNeedReward)
+                backToMenuSlider.gameObject.SetActive(false);
+            winEffect.gameObject.SetActive(true);
+            winEffect.Play();
+            await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy == false, cancellationToken: cancellationToken.Token);
+            if (isNeedReward)
+               scratcher.StartScratching();
+            else
+            {
+                raycaster.enabled = true;
+                scratchAgainButton.Activate();
+                await UniTask.WaitUntil(() => scratchAgainButton.Button.interactable == false, cancellationToken: cancellationToken.Token);
+            }
+            await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
+            gameObject.SetActive(false);
+        }
+
         private void Shuffle(ref List<Sprite> list)
         {
             System.Random rnd = new();
@@ -220,7 +235,10 @@ namespace MiniGames.Modules.Level.MatchTwo
             }
             foreach (var item in choiceParticles)
             {
-                Destroy(item.gameObject);
+                if (item.gameObject!=null)
+                {
+                    Destroy(item.gameObject);
+                }
             }
         }
     }

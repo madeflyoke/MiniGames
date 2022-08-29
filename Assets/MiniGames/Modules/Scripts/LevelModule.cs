@@ -13,6 +13,7 @@ namespace MiniGames.Modules
         [SerializeField] private float startGameDelay;
         [SerializeField] private LevelController levelController;
         private CancellationTokenSource cancellationToken;
+        public LevelController LevelController => levelController;
 
         public async void OnLoaded()
         {

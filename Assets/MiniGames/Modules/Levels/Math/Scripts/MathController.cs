@@ -10,6 +10,7 @@ namespace MiniGames.Modules.Level.Math
 {
     public class MathController : LevelController
     {
+        [SerializeField] private ScratchAgainButton scratchAgainButton;
         [SerializeField] private float nextQuestionDelay;
         [Tooltip("Need synchronization with check marks on screen ")]
         [SerializeField] private int questionsCount;
@@ -34,6 +35,7 @@ namespace MiniGames.Modules.Level.Math
             canvasRaycaster.enabled = false;
             question.Initialize(out poolOfNumbers);
             correctAnswerEffect.transform.position = answerZone.transform.position + (Vector3.back*5);
+            winEffect.gameObject.SetActive(false);
             winEffect.transform.position = Vector3.zero + (Vector3.forward * 5);
         }
 
@@ -65,14 +67,9 @@ namespace MiniGames.Modules.Level.Math
             correctAnswerEffect.Play();
             canvasRaycaster.enabled = false;
             questionsCount--;         
-            if (questionsCount < 0)
+            if (questionsCount < 0) //end
             {
-                backToMenuSlider.gameObject.SetActive(false);
-                winEffect.Play();
-                await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy==false, cancellationToken: cancellationToken.Token);
-                scratcher.StartScratching();
-                await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
-                gameObject.SetActive(false);
+                EndLogic();
                 return;
             }
             await UniTask.Delay(1500, cancellationToken: cancellationToken.Token); //time between questions
@@ -111,6 +108,25 @@ namespace MiniGames.Modules.Level.Math
                     tmpNumbers.Remove(wrongAnswer);
                 }
             }
+        }
+
+        private async void EndLogic()
+        {
+            if (isNeedReward)
+                backToMenuSlider.gameObject.SetActive(false);
+            winEffect.gameObject.SetActive(true);
+            winEffect.Play();
+            await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy == false, cancellationToken: cancellationToken.Token);
+            if (isNeedReward)
+                scratcher.StartScratching();
+            else
+            {
+                canvasRaycaster.enabled = true;
+                scratchAgainButton.Activate();
+                await UniTask.WaitUntil(() => scratchAgainButton.Button.interactable == false, cancellationToken: cancellationToken.Token);
+            }
+            await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
+            gameObject.SetActive(false);
         }
 
         private void OnDestroy()

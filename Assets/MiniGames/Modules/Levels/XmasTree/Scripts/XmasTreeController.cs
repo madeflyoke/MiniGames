@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace MiniGames.Modules.Level.XmasTree
 {
@@ -32,6 +33,7 @@ namespace MiniGames.Modules.Level.XmasTree
         [Space]
         [SerializeField] private XmasTreeAnimator animator;
         [SerializeField] private ToysBagController toysBagController;
+        [SerializeField] private ScratchAgainButton scratchAgainButton;
         [Header("Toys And Cells")]
         [Tooltip("Star must go first and set up by player last, so done separation")]
         [SerializeField] private StarData star;
@@ -50,13 +52,13 @@ namespace MiniGames.Modules.Level.XmasTree
             cancellationToken = new CancellationTokenSource();
             snow.Play();
             winEffect.gameObject.SetActive(false);
-            SetupToysCells();          
+            SetupToysCells();
         }
 
         private void Start()
         {
             animator.Initialize();
-            toysBagController.Initialize(); 
+            toysBagController.Initialize();
         }
 
         public override void StartGame()
@@ -98,16 +100,28 @@ namespace MiniGames.Modules.Level.XmasTree
             star.starCell.correctAnswerEvent += OnLastAnswerDone;
         }
 
-        private async void OnLastAnswerDone()
+        private async void OnLastAnswerDone() //check whether its first walkthrough or not
         {
-            backToMenuSlider.gameObject.SetActive(false);
+            if (isNeedReward)
+                backToMenuSlider.gameObject.SetActive(false);
             await UniTask.Delay(250, cancellationToken: cancellationToken.Token);
             winEffect.gameObject.SetActive(true);
             winEffect.Play();
             await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy == false, cancellationToken: cancellationToken.Token);
-            scratcher.StartScratching();
+            if (isNeedReward)
+                scratcher.StartScratching();
+            else
+            {
+                scratchAgainButton.Activate();
+                await UniTask.WaitUntil(() => scratchAgainButton.Button.interactable == false, cancellationToken: cancellationToken.Token);
+            }
             await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
             gameObject.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            cancellationToken.Cancel();
         }
     }
 }

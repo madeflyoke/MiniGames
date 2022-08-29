@@ -1,8 +1,6 @@
 ﻿using MiniGames.Managers;
 using Zenject;
 
-namespace MiniGames.Context.Installers
-{
     public class PlayerPrefsDataInstaller : MonoInstaller
     {
         public override void InstallBindings()
@@ -10,4 +8,3 @@ namespace MiniGames.Context.Installers
             Container.BindInstance(new PlayerPrefsData()).AsSingle().NonLazy();
         }
     }
-}

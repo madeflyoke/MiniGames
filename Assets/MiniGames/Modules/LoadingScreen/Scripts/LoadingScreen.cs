@@ -44,6 +44,13 @@ namespace MiniGames.Modules.LoadingScreen
             gameObject.SetActive(false);
         }
 
+        private void OnDestroy()
+        {
+            if (cancellationToken != null)
+            {
+                cancellationToken.Cancel();
+            }
+        }
     }
 }
 
