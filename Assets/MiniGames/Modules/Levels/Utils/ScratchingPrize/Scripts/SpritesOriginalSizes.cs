@@ -96,6 +96,7 @@ namespace MiniGames.Modules.Level.Utils
         }
 
 #else
+
         public Vector2 GetOriginalWidthHeight(Texture2D texture)
         {
             string text = File.ReadAllText(Application.dataPath + "/SpritesSizeData.json");

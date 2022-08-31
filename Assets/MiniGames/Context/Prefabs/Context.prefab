@@ -415,6 +415,51 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &3268498985879979702
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9157171698019251535}
+  - component: {fileID: 3672588882286736575}
+  m_Layer: 0
+  m_Name: GameInitializationSettings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9157171698019251535
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3268498985879979702}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9083691865721492032}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3672588882286736575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3268498985879979702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6302a5b1f4e7444cad1db3eaeb73ab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fps: 60
 --- !u!1 &9083691865163786083
 GameObject:
   m_ObjectHideFlags: 0
@@ -460,8 +505,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuModulePrefab: {fileID: 6687456098770051667, guid: d05ee2d054ceec444acd742b2d93ca21, type: 3}
-  mathModulePrefab: {fileID: 6318234483695409174, guid: eda6a786ead8fe543b582798a7e2bf08, type: 3}
-  xmasTreeModulePrefab: {fileID: 7808653141417309761, guid: 38162407f93f28145934bc36ee2c0414, type: 3}
+  mathModulePrefab: {fileID: 328520620973824392, guid: 9009e583bfc48db4392412152aadcf22, type: 3}
+  xmasTreeModulePrefab: {fileID: 4699313512259318063, guid: 648c594a49859b842805845cd0b76c25, type: 3}
   matchTwoModulePrefab: {fileID: 1851371376734441764, guid: 717f57d7f7300814d9935d2ec3ca56f5, type: 3}
   loadingScreen: {fileID: 2847655538306518788}
 --- !u!1 &9083691865682190504
@@ -547,6 +592,7 @@ Transform:
   - {fileID: 9083691865682190506}
   - {fileID: 9083691865163786082}
   - {fileID: 2847655538306518789}
+  - {fileID: 9157171698019251535}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

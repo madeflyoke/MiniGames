@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace MiniGames.Modules.Main.Menu.ChooseMenu
 {
@@ -12,6 +13,7 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
 
         [SerializeField] private Button mainMenuButton;
 
+        [SerializeField] private List<GameObject> blockedIslandsMasks;
         [SerializeField] private GameObject background;
         [SerializeField] private GameObject wavesParticles;
         [SerializeField] private Transform islandsPivot;
@@ -38,6 +40,10 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
         public void Deactivate()
         {
             background.gameObject.SetActive(true);
+            foreach (var item in blockedIslandsMasks)
+            {
+                item.SetActive(false);
+            }
             mainMenuButton.gameObject.SetActive(false);
             islandsPivot.gameObject.SetActive(false);
             wavesParticles.SetActive(false);
@@ -46,6 +52,10 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
 
         public void Activate()
         {
+            foreach (var item in blockedIslandsMasks)
+            {
+                item.SetActive(true);
+            }
             background.gameObject.SetActive(true);
             islandsPivot.gameObject.SetActive(true);
             mainMenuButton.gameObject.SetActive(true);
