@@ -40,6 +40,9 @@ namespace MiniGames.Modules.Level.Utils
 
         private void Awake()
         {
+            currentRT = null;
+            renderTextureCam.targetTexture=null;
+            RenderTexture.active = null;
             exitButton.transform.parent.gameObject.SetActive(false);
             mainCam = Camera.main;
             renderTextureCam.transform.position = new Vector3(0, 0, trailPrefab.transform.position.z - 5);
@@ -61,19 +64,23 @@ namespace MiniGames.Modules.Level.Utils
             int height = (int)size.y;
             Vector2 sizeCorrections = new Vector2((float)width / sprite.texture.width, (float)height / sprite.texture.height);
             correctionOffset = worldSpriteCenter - worldMainTextureCenter;
-            correctionOffset = new Vector2(correctionOffset.x, correctionOffset.y) * sizeCorrections.x*targetSr.transform.localScale;
-            currentRT = new RenderTexture(sprite.texture.width, sprite.texture.height, 1);
+            correctionOffset = new Vector2(correctionOffset.x, correctionOffset.y) * sizeCorrections.x * targetSr.transform.localScale;
+          
+            currentRT = RenderTexture.GetTemporary(sprite.texture.width, sprite.texture.height, 1);
+            RenderTexture.active = currentRT;
             renderTextureCam.targetTexture = currentRT;
             renderTextureCam.orthographicSize = sprite.texture.height / sprite.pixelsPerUnit
                 * targetSr.transform.localScale.x / 2;
             renderTextureCam.Render();
 
             targetSr.material.SetTexture(rtTexture, currentRT);
+            targetSr.material.SetFloat("_isActive", 1f);
             scratcherProgress.Initialize(sprite, currentRT);
         }
 
         public void StartScratching()
         {
+            ClearCameraBuffer();
             Color tmpColor = background.color;
             background.color = new Color(background.color.r, background.color.g,
                 background.color.b, 0f);
@@ -117,6 +124,15 @@ namespace MiniGames.Modules.Level.Utils
                 });
         }
 
+        private void ClearCameraBuffer()
+        {
+            renderTextureCam.clearFlags = CameraClearFlags.Color;
+            renderTextureCam.backgroundColor = new Color(0, 0, 0, 0);
+            renderTextureCam.Render();
+            renderTextureCam.clearFlags = CameraClearFlags.Nothing;
+            renderTextureCam.Render();
+        }
+
         private void OnEnable()
         {
             scratcherProgress.fillingCompleteEvent += EndScratching;
@@ -128,7 +144,12 @@ namespace MiniGames.Modules.Level.Utils
 
         private void OnDestroy()
         {
+            if (targetSr!=null&&rtTexture!=null)
+                targetSr.material.SetTexture(rtTexture, null);
+            if (cancellationToken!=null)
+                 cancellationToken.Cancel();
             currentRT.Release();
+            currentRT.DiscardContents();
         }
 
         void Update()
@@ -151,7 +172,7 @@ namespace MiniGames.Modules.Level.Utils
         {
             cancellationToken = new CancellationTokenSource();
             Vector3 pos = mainCam.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 posOffseted = pos + (Vector3)correctionOffset;
+            Vector3 posOffseted = pos +(Vector3)correctionOffset;
             Vector3 correctMousePos = new Vector3(posOffseted.x, posOffseted.y, 0f);
             scratchEffect.gameObject.SetActive(false);
             scratchEffect.transform.position = new Vector3(pos.x, pos.y, mainCam.transform.position.z + 10f);

@@ -28,7 +28,7 @@ namespace MiniGames.Managers
         {
             LoadMenuModule(MenuModule.Mode.MainMenu);
         }
-
+        
         private async void LoadLevelModule(LevelType levelType)
         {
             loadingScreen.StartAnimation();

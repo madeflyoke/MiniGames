@@ -21,23 +21,7 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _DrawTexture:
-        m_Texture: {fileID: 8400000, guid: 4f6b32f99d5e5c441868a40965847025, type: 2}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Gnil:
-        m_Texture: {fileID: 2800000, guid: dedb610ce3fcd1743810916e8af313ad, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 10, y: 10}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: dc50e1278529fc043863ca434ec9e53b, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_dace59c863e24085836f337577387bbc_Texture_1:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _ScratchTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -59,17 +43,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BOO: 0
-    - _Boolean: 1
-    - _ISTEXTURE: 0
     - _MODE: 1
-    - _Rotate: 0
     - _WrapperRotation: 0
     - _isActive: 1
     m_Colors:
-    - _Rotate: {r: 0, g: 0, b: 0, a: 0}
     - _ScratchColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Tiling: {r: 0, g: 0, b: 0, a: 0}
     - _WrapperOffset: {r: -0.39, g: -0.13, b: 0, a: 0}
     - _WrapperTiling: {r: 1.67, g: 1.35, b: 0, a: 0}
   m_BuildTextureStacks: []

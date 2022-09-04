@@ -24,14 +24,6 @@ namespace MiniGames.Modules.Level.XmasTree
             HideInstant();
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                
-            }
-        }
-
         private void SetupDefaultScales()
         {
             defaultToysPivotsScales = new();
@@ -46,6 +38,10 @@ namespace MiniGames.Modules.Level.XmasTree
 
         public void ShowingAnimation(Action onComplete)
         {
+            if (defaultToysPivotsScales==null||defaultStarPivotScale.Key==null)
+            {
+                SetupDefaultScales();
+            }
             Sequence seq = DOTween.Sequence();
             seq.Append(defaultStarPivotScale.Key.DOScale(defaultStarPivotScale.Value, showSpeedTime));
             foreach (var item in defaultToysPivotsScales)

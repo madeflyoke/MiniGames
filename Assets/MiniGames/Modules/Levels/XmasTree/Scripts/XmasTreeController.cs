@@ -6,7 +6,6 @@ using Random = UnityEngine.Random;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using UnityEngine.UI;
-using DG.Tweening;
 
 namespace MiniGames.Modules.Level.XmasTree
 {

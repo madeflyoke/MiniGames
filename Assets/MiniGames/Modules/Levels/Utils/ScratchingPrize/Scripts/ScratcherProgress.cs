@@ -37,9 +37,9 @@ namespace MiniGames.Modules.Level.Utils
             }
         }
 
-        [Range(0f,1f)]
+        [Range(0f,100f)]
         [Tooltip("Complicated images can provide hard-seeing areas, " +
-            "specifically in same color with shader texture/color, default value = 0.015")]
+            "specifically in same color with shader texture/color, in percents, default value = 1.5f")]
         [SerializeField] private float currentImageFilnessErorr = 0.015f;
 
         private Scratcher scratcher;
@@ -48,7 +48,6 @@ namespace MiniGames.Modules.Level.Utils
         private Rect spriteRectOnScreen;
         private Texture2D spriteCopy;
         private int targetPixelsCount;
-
         private CancellationTokenSource cancellationToken;
 
         private void Awake()
@@ -58,7 +57,7 @@ namespace MiniGames.Modules.Level.Utils
 
         public void Initialize(Sprite sprite, RenderTexture renderTexture)
         {
-             spritePixels = sprite.texture.GetPixels((int)sprite.rect.x, (int)sprite.rect.y,
+            spritePixels = sprite.texture.GetPixels((int)sprite.rect.x, (int)sprite.rect.y,
                (int)sprite.rect.width, (int)sprite.rect.height);
          
             currentRT = renderTexture;
@@ -87,18 +86,18 @@ namespace MiniGames.Modules.Level.Utils
             scratcher.startTouchingEvent -= CheckProgress;
         }
 
+
         [BurstCompile]
         private async void CheckProgress()
         {
             cancellationToken = new CancellationTokenSource();
-            while (Input.GetKey(KeyCode.Mouse0))
+            while (Input.GetKey(KeyCode.Mouse0)) 
             {
-                RenderTexture.active = currentRT;
+                RenderTexture.active = currentRT; //read pixels on late update? works by now 
                 spriteCopy.ReadPixels(spriteRectOnScreen, 0, 0);
                 NativeArray<Color32> rtPixels = spriteCopy.GetRawTextureData<Color32>();               
                 NativeArray<Color> targetSpritePixels = new NativeArray<Color>(spritePixels, Allocator.TempJob);
                 NativeArray<int> resultArray = new NativeArray<int>(2, Allocator.TempJob);
-
 
                 PixelJob job = new PixelJob
                 {
@@ -127,7 +126,7 @@ namespace MiniGames.Modules.Level.Utils
                 targetSpritePixels.Dispose();
                 resultArray.Dispose();
                 rtPixels.Dispose();
-                await UniTask.Delay(250, cancellationToken:cancellationToken.Token);           
+                await UniTask.Delay(1000, cancellationToken:cancellationToken.Token); //set delay to each loop of checking        
             }
         }
 

@@ -40,7 +40,9 @@ namespace MiniGames.Modules.Level.Utils
             button.interactable = false;
             transform.DOKill();
             transform.DOPunchScale(Vector3.one * 0.1f, 0.2f, 5).OnComplete(() =>
-            scratcher.StartScratching());
+            {
+                scratcher.StartScratching();
+            });
         }
 
         private void OnDestroy()

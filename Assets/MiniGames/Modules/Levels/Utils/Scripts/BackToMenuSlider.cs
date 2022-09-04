@@ -27,7 +27,7 @@ namespace MiniGames.Modules.Level.Utils
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (slider.value == slider.maxValue)
+            if (slider.value >= (slider.maxValue*0.95f))
             {
                 slider.interactable = false;
                 exitSliderCompleteEvent?.Invoke();

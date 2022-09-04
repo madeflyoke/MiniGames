@@ -1,10 +1,13 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking;
+using Cysharp.Threading.Tasks;
 
 namespace MiniGames.Modules.Level.Utils
 {
@@ -18,7 +21,7 @@ namespace MiniGames.Modules.Level.Utils
         [Serializable]
         public class SpriteSizesData
         {          
-            public Dictionary<string,SerializableVector2> spriteSizes;
+            public Dictionary<string,SerializableVector2> spriteSizesData;
         }
 
         public class SerializableVector2
@@ -30,16 +33,19 @@ namespace MiniGames.Modules.Level.Utils
         [SerializeField] private List<Sprite> sprites;
         private Dictionary<string, SerializableVector2> spriteSizes;
 
-
-#if UNITY_EDITOR
         private void Awake()
-        {         
+        {
             if (sprites.Count != 0)
             {
+#if UNITY_EDITOR
                 UpdateAndSaveTexturesData();
-            }          
+#else
+                GetTextureData();
+#endif
+            }
         }
 
+#if UNITY_EDITOR
         private SerializableVector2 GetOriginalTextureSize(Texture2D asset)
         {
             if (asset != null)
@@ -77,34 +83,56 @@ namespace MiniGames.Modules.Level.Utils
                 spriteSizes[item.texture.name] = GetOriginalTextureSize(item.texture);
             }
 
-            SpriteSizesData data = new SpriteSizesData { spriteSizes = spriteSizes };
+            SpriteSizesData data = new SpriteSizesData { spriteSizesData = spriteSizes };
             var json = JsonConvert.SerializeObject(data);
-            File.WriteAllText(Application.dataPath + "/SpritesSizeData.json", json);
+            File.WriteAllText(Path.Combine(Application.streamingAssetsPath, "SpritesSizeData.json"), json);
         }
 
         public Vector2 GetOriginalWidthHeight(Texture2D texture)
         {
-            if (spriteSizes==null) //safety way
+            if (spriteSizes == null) //safety way
             {
-                string text = File.ReadAllText(Application.dataPath + "/SpritesSizeData.json");
+                string text = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "SpritesSizeData.json"));
 
                 SpriteSizesData data = JsonConvert.DeserializeObject<SpriteSizesData>(text);
-                return new Vector2(data.spriteSizes[texture.name].x, data.spriteSizes[texture.name].y);
+                return new Vector2(data.spriteSizesData[texture.name].x, data.spriteSizesData[texture.name].y);
             }
             else
-            return new Vector2(spriteSizes[texture.name].x, spriteSizes[texture.name].y);
+                return new Vector2(spriteSizes[texture.name].x, spriteSizes[texture.name].y);
         }
 
 #else
-
+        public async void GetTextureData()
+        {
+            spriteSizes = new Dictionary<string, SerializableVector2>();
+            string pathUrl = Path.Combine(Application.streamingAssetsPath, "SpritesSizeData.json");
+            using (UnityWebRequest request = UnityWebRequest.Get(pathUrl))
+            {
+                await request.SendWebRequest().ToUniTask();
+                switch (request.result)
+                {
+                    case UnityWebRequest.Result.ConnectionError:
+                        Debug.LogError("Connection error: " + request.error);
+                        break;
+                    case UnityWebRequest.Result.DataProcessingError:
+                        Debug.LogError("Error: " + request.error);
+                        break;
+                    case UnityWebRequest.Result.ProtocolError:
+                        Debug.LogError("HTTP Error: " + request.error);
+                        break;
+                    case UnityWebRequest.Result.Success:
+                        string text = request.downloadHandler.text;
+                        SpriteSizesData data = JsonConvert.DeserializeObject<SpriteSizesData>(text);
+                        spriteSizes = data.spriteSizesData;
+                        break;
+                }
+            }
+        }
+        
         public Vector2 GetOriginalWidthHeight(Texture2D texture)
         {
-            string text = File.ReadAllText(Application.dataPath + "/SpritesSizeData.json");
-
-            SpriteSizesData data = JsonConvert.DeserializeObject<SpriteSizesData>(text);
-            return new Vector2(data.spriteSizes[texture.name].x, data.spriteSizes[texture.name].y);
+            return new Vector2(spriteSizes[texture.name].x, spriteSizes[texture.name].y);
         }
-
 #endif
     }
 }
