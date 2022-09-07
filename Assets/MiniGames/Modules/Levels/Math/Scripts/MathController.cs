@@ -131,7 +131,7 @@ namespace MiniGames.Modules.Level.Math
 
         private void OnDestroy()
         {
-            Draggable.s_currentDraggable = null;
+            //Draggable.s_currentDraggable = null;
         }
     }
 }

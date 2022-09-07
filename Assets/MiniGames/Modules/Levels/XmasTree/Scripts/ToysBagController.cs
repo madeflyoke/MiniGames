@@ -61,7 +61,6 @@ namespace MiniGames.Modules.Level.XmasTree
             star.starCell.correctAnswerEvent += () =>
             {
                 cancellationToken.Cancel();
-                Draggable.s_currentDraggable = null;
             };
             button.onClick.AddListener(ButtonListener);
             bagPointerHelper.gameObject.SetActive(false);
@@ -88,7 +87,6 @@ namespace MiniGames.Modules.Level.XmasTree
         private void ButtonListener()
         {
             button.interactable = false;
-            xmasTreeController.Raycaster.enabled = false;
             if (bagPointerHelper.gameObject.activeInHierarchy == true)
             {
                 HideHelper();
@@ -99,12 +97,12 @@ namespace MiniGames.Modules.Level.XmasTree
         private void Animation()
         {
             Sequence seq = DOTween.Sequence(); //bag animation
-            seq.Append(bagAnimationPivot.DOScaleX(bagDefaultScale.x * 1.1f, 0.3f))
-                .Join(bagAnimationPivot.DOScaleY(bagDefaultScale.y * 0.9f, 0.3f))
-                .Append(bagAnimationPivot.DOScaleX(bagDefaultScale.x * 0.88f, 0.2f))
-                .Join(bagAnimationPivot.DOScaleY(bagDefaultScale.y * 1.13f, 0.2f).OnComplete(() => ShowToy()))
-                .Append(bagAnimationPivot.DOScaleX(bagDefaultScale.x, 0.8f))
-                .Join(bagAnimationPivot.DOScaleY(bagDefaultScale.y, 0.8f)).SetEase(Ease.InCubic);
+            seq.Append(bagAnimationPivot.DOScaleX(bagDefaultScale.x * 1.1f, 0.27f))
+                .Join(bagAnimationPivot.DOScaleY(bagDefaultScale.y * 0.9f, 0.27f))
+                .Append(bagAnimationPivot.DOScaleX(bagDefaultScale.x * 0.88f, 0.17f))
+                .Join(bagAnimationPivot.DOScaleY(bagDefaultScale.y * 1.13f, 0.17f).OnComplete(() => ShowToy()))
+                .Append(bagAnimationPivot.DOScaleX(bagDefaultScale.x, 0.72f))
+                .Join(bagAnimationPivot.DOScaleY(bagDefaultScale.y, 0.72f)).SetEase(Ease.InCubic);
         }
 
         private void ShowToy()
@@ -122,10 +120,9 @@ namespace MiniGames.Modules.Level.XmasTree
             }
             currentToy.transform.SetAsLastSibling();
             currentToy.gameObject.SetActive(true);
-            currentToy.transform.DOMove(endRevealPivot.position, 0.8f).SetEase(Ease.OutBack)
+            currentToy.transform.DOMove(endRevealPivot.position, 0.72f).SetEase(Ease.OutBack)
                 .OnComplete(() =>
                 {
-                    xmasTreeController.Raycaster.enabled = true;
                     SupportToyAnimation();
                 });
         }
@@ -136,7 +133,6 @@ namespace MiniGames.Modules.Level.XmasTree
             cancellationToken = new CancellationTokenSource();
             answersEffects[currentToy].gameObject.SetActive(true);
             answersEffects[currentToy].Play();
-            Draggable.s_currentDraggable = null;
             button.interactable = true; //end
         }
 
@@ -164,10 +160,8 @@ namespace MiniGames.Modules.Level.XmasTree
             if (currentToy!=null)
             {
                 currentToy.transform.DOKill();
-
             }
             cancellationToken.Cancel();
-            Draggable.s_currentDraggable = null;
         }
 
     }

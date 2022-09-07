@@ -170,6 +170,11 @@ namespace MiniGames.Modules.Level.Utils
        
         private async void SetTrail()
         {
+            if (helperPointer.activeInHierarchy)
+            {
+                helperPointer.transform.DOKill();
+                helperPointer.SetActive(false);
+            }
             cancellationToken = new CancellationTokenSource();
             Vector3 pos = mainCam.ScreenToWorldPoint(Input.mousePosition);
             Vector3 posOffseted = pos +(Vector3)correctionOffset;

@@ -37,7 +37,7 @@ namespace MiniGames.Modules.Level.Utils
             rectTransform.DOKill();
             rectTransform.DOScale(rectTransform.localScale / enterScale, 0.3f).endValue = defaultScale;
             
-            if (eventData.pointerDrag == correctObject.gameObject&&Draggable.s_currentDraggable==eventData.pointerDrag)
+            if (eventData.pointerDrag == correctObject.gameObject/*&&Draggable.s_currentDraggable==eventData.pointerDrag*/)
             {
                 correctObject.selfControl = false;
                 correctObject.transform.DOKill();
@@ -52,7 +52,7 @@ namespace MiniGames.Modules.Level.Utils
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (eventData.pointerDrag != null && Draggable.s_currentDraggable == eventData.pointerDrag)
+            if (eventData.pointerDrag != null /*&& Draggable.s_currentDraggable == eventData.pointerDrag*/)
             {
                 rectTransform.DOKill();
                 rectTransform.DOScale(rectTransform.localScale * enterScale, 0.2f).startValue = defaultScale;
@@ -61,7 +61,7 @@ namespace MiniGames.Modules.Level.Utils
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (eventData.pointerDrag != null && Draggable.s_currentDraggable == eventData.pointerDrag)
+            if (eventData.pointerDrag != null /*&& Draggable.s_currentDraggable == eventData.pointerDrag*/)
             {
                 rectTransform.DOKill();
                 rectTransform.DOScale(rectTransform.localScale / enterScale, 0.2f).endValue = defaultScale;
