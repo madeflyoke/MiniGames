@@ -13,6 +13,7 @@ namespace MiniGames.Modules.Level.MatchTwo
     {
         [SerializeField] private MatchTwoAnimator animator;
         [SerializeField] private ScratchAgainButton scratchAgainButton;
+        [SerializeField] private MatchTwoHelper helper;
         [Space]
         [SerializeField] private ParticleSystem winEffect;
         [SerializeField] private ParticleSystem choiceEffectPrefab;
@@ -22,11 +23,10 @@ namespace MiniGames.Modules.Level.MatchTwo
         [SerializeField] private Transform suitcase;
         [SerializeField] private List<Sprite> items;
         [SerializeField] private List<Image> itemsPivots;
-        [SerializeField] private List<GameObject> helperPointers;
         private int currentLevelIndex;
         private GraphicRaycaster raycaster;
         private Image currentSelectable;
-        private CancellationTokenSource cancellationToken;
+        private CancellationTokenSource cts;
         private Dictionary<Button, Image> itemsButtons;
         private int answersPerLevel;
         private Queue<ParticleSystem> choiceParticles;
@@ -50,7 +50,7 @@ namespace MiniGames.Modules.Level.MatchTwo
             raycaster = GetComponent<GraphicRaycaster>();
             raycaster.enabled = false;
             animator.HideInstant();
-            cancellationToken = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
             itemsButtons = new();
             foreach (var item in itemsPivots) //cache button components
             {
@@ -64,43 +64,13 @@ namespace MiniGames.Modules.Level.MatchTwo
         public override void StartGame()
         {
             SetupItems();
+            helper.Initialize(() => currentSelectable != null, itemsPivots);
             animator.ShowStartAnimation(() =>
             {
                 raycaster.enabled = true;
                 backToMenuSlider.gameObject.SetActive(true);
-                ShowHelperPointers();
+                helper.ShowHelper();
             });
-        }
-
-        private void ShowHelperPointers()
-        {
-            var firstHelper = helperPointers[0];
-            var secondHelper = helperPointers[1];
-            var firstPivot = itemsPivots[Random.Range(0, itemsPivots.Count)];
-            firstHelper.transform.position = firstPivot.transform.position;
-            foreach (var secondPivot in itemsPivots)
-            {
-                if (secondPivot.sprite == firstPivot.sprite && secondPivot != firstPivot)
-                {
-                    secondHelper.transform.position = secondPivot.transform.position;
-                    break;
-                }
-            }
-            firstHelper.SetActive(true);
-            secondHelper.SetActive(true);
-
-            firstHelper.transform.DOMove(firstHelper.transform.position + (firstHelper.transform.up * 0.2f), 0.7f)
-                .SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
-            secondHelper.transform.DOMove(secondHelper.transform.position + (secondHelper.transform.up * 0.2f), 0.7f)
-                .SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
-        }
-        private void HideHelperPointers()
-        {
-            foreach (var item in helperPointers)
-            {
-                item.transform.DOKill();
-                item.SetActive(false);
-            }
         }
 
         private void SetupItems() //each wave(level)
@@ -152,7 +122,7 @@ namespace MiniGames.Modules.Level.MatchTwo
             {
                 itemPivot.gameObject.SetActive(true);
             }
-            await UniTask.Delay(1500, cancellationToken: cancellationToken.Token);
+            await UniTask.Delay(1500, cancellationToken: cts.Token);
             animator.ShowNextAnimation(() =>
             {
                 raycaster.enabled = true;
@@ -191,10 +161,6 @@ namespace MiniGames.Modules.Level.MatchTwo
 
         private void ItemButtonListener(Image selectableImage) //first item selected-->cached in currentSelectable--->wait for second item to compare
         {
-            if (helperPointers[0].activeInHierarchy)
-            {
-                HideHelperPointers();
-            }
             if (currentSelectable == null) //if the item is first-selected
             {
                 currentSelectable = selectableImage;
@@ -227,7 +193,7 @@ namespace MiniGames.Modules.Level.MatchTwo
             secondItem.transform.DOScale(secondItem.transform.localScale * 1.2f, 0.3f).OnComplete(() =>
             {
                 suitcase.DOKill();
-                DOTween.Sequence()
+                DOTween.Sequence(transform)
                    .Append(firstItem.transform.DOMove(pairArrivePivot.position + Vector3.left / 2, 0.5f).SetEase(Ease.OutCubic)) //moving to arrive point 
                    .Join(secondItem.transform.DOMove(pairArrivePivot.position + Vector3.right / 2, 0.5f).SetEase(Ease.OutCubic))
                    .Append(firstItem.transform.DOMove(suitcase.position, 0.3f)) //move down in suitcase
@@ -258,16 +224,16 @@ namespace MiniGames.Modules.Level.MatchTwo
                 backToMenuSlider.gameObject.SetActive(false);
             winEffect.gameObject.SetActive(true);
             winEffect.Play();
-            await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy == false, cancellationToken: cancellationToken.Token);
+            await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy == false, cancellationToken: cts.Token);
             if (isNeedReward)
                 scratcher.StartScratching();
             else
             {
                 raycaster.enabled = true;
                 scratchAgainButton.Activate();
-                await UniTask.WaitUntil(() => scratchAgainButton.Button.interactable == false, cancellationToken: cancellationToken.Token);
+                await UniTask.WaitUntil(() => scratchAgainButton.Button.interactable == false, cancellationToken: cts.Token);
             }
-            await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
+            await UniTask.Delay(3000, cancellationToken: cts.Token);
             gameObject.SetActive(false);
         }
 
@@ -279,13 +245,14 @@ namespace MiniGames.Modules.Level.MatchTwo
 
         private void OnDestroy()
         {
-            if (cancellationToken != null)
-            {
-                cancellationToken.Cancel();
-            }
+            transform.DOKill();
             foreach (var itemPivot in itemsPivots)
             {
                 itemPivot.transform.DOKill();
+            }
+            if (cts != null)
+            {
+                cts.Cancel();
             }
             foreach (var item in choiceParticles)
             {
@@ -295,7 +262,6 @@ namespace MiniGames.Modules.Level.MatchTwo
                 }
             }
             suitcase.DOKill();
-            HideHelperPointers();
         }
     }
 }

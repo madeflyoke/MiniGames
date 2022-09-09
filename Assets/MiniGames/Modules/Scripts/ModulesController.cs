@@ -17,11 +17,11 @@ namespace MiniGames.Managers
         [SerializeField] private GameObject matchTwoModulePrefab;
         [SerializeField] private LoadingScreen loadingScreen;
         private Module currentModule;
-        private CancellationTokenSource cancellationToken;
+        private CancellationTokenSource cts;
 
         private void Awake()
         {
-            cancellationToken = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
         }
 
         private void Start()
@@ -54,7 +54,7 @@ namespace MiniGames.Managers
             LevelModule component = (LevelModule)currentModule;
             component.LevelController.Initialize(levelType);
             component.backToMenuEvent += () => LoadMenuModule(MenuModule.Mode.ChooseMenu);            
-            await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
+            await UniTask.Delay(3000, cancellationToken: cts.Token);
             loadingScreen.StopAnimation();
             component.OnLoaded();
         }
@@ -67,7 +67,7 @@ namespace MiniGames.Managers
             MenuModule menuComponent = currentModule.GetComponent<MenuModule>();
             menuComponent.Initialize(mode);
             menuComponent.ChooseMenuController.levelChosenEvent += LoadLevelModule;
-            await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
+            await UniTask.Delay(3000, cancellationToken: cts.Token);
             loadingScreen.StopAnimation();
         }
 

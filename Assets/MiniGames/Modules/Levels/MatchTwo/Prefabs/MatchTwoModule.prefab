@@ -1455,8 +1455,7 @@ RectTransform:
   - {fileID: 1851371376367443029}
   - {fileID: 2918753533528525248}
   - {fileID: 4949445384095891986}
-  - {fileID: 3080623453127307226}
-  - {fileID: 3406852272525830788}
+  - {fileID: 5312906508421813361}
   m_Father: {fileID: 1851371376734441765}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1576,6 +1575,7 @@ MonoBehaviour:
   backToMenuSlider: {fileID: 2918753533528525254}
   animator: {fileID: 1851371376728326547}
   scratchAgainButton: {fileID: 651277972958590546}
+  helper: {fileID: 3707326310175658418}
   winEffect: {fileID: 8368971367317151065}
   choiceEffectPrefab: {fileID: 7333170362249047461, guid: c77725072f2a86c419cab083a35f3f41, type: 3}
   levelsCount: 3
@@ -1613,9 +1613,6 @@ MonoBehaviour:
   - {fileID: 1851371376840877578}
   - {fileID: 1851371377454171226}
   - {fileID: 1851371376836156774}
-  helperPointers:
-  - {fileID: 2687340314442353970}
-  - {fileID: 2339283241812136672}
 --- !u!1 &1851371376734441764
 GameObject:
   m_ObjectHideFlags: 0
@@ -3246,13 +3243,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2339283241812136672}
-  m_LocalRotation: {x: 0, y: 0, z: 0.19936788, w: 0.97992474}
+  m_LocalRotation: {x: -0, y: -0, z: 0.19936788, w: 0.97992474}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1851371376728326546}
-  m_RootOrder: 8
+  m_Father: {fileID: 5312906508421813361}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 23}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3322,17 +3319,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2687340314442353970}
-  m_LocalRotation: {x: 0, y: 0, z: 0.19936788, w: 0.97992474}
+  m_LocalRotation: {x: -0, y: -0, z: 0.19936788, w: 0.97992474}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1851371376728326546}
-  m_RootOrder: 7
+  m_Father: {fileID: 5312906508421813361}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 23}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 7.0000124, y: 709}
+  m_AnchoredPosition: {x: 73, y: 682}
   m_SizeDelta: {x: 85, y: 85}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &979820098977946732
@@ -18841,6 +18838,60 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &7455704170311267974
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5312906508421813361}
+  - component: {fileID: 3707326310175658418}
+  m_Layer: 5
+  m_Name: HelperPointers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5312906508421813361
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7455704170311267974}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3080623453127307226}
+  - {fileID: 3406852272525830788}
+  m_Father: {fileID: 1851371376728326546}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3707326310175658418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7455704170311267974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd6c6ff83f0225c49848c790d463c3d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  helperPointers:
+  - {fileID: 3080623453127307226}
+  - {fileID: 3406852272525830788}
 --- !u!1001 &346043795955974104
 PrefabInstance:
   m_ObjectHideFlags: 0

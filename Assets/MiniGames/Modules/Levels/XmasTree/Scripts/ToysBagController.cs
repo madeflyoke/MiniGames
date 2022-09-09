@@ -18,22 +18,21 @@ namespace MiniGames.Modules.Level.XmasTree
         [SerializeField] private ParticleSystem correctAnswerEffectPrefab;
         [Space]
         [SerializeField] private XmasTreeController xmasTreeController;
+        [SerializeField] private TutorialHelper tutorialHelper;
         [SerializeField] private Button button;
-        [SerializeField] private Transform bagPointerHelper;
         [SerializeField] private RectTransform bagAnimationPivot;
         [SerializeField] private RectTransform startRevealPivot;
         [SerializeField] private RectTransform endRevealPivot;
-
         private Vector3 bagDefaultScale;
         private List<Draggable> toys;
         private XmasTreeController.StarData star;
-        private CancellationTokenSource cancellationToken;
+        private CancellationTokenSource cts;
         private Draggable currentToy;
         private Dictionary<Draggable, ParticleSystem> answersEffects; 
 
         private void Awake()
         {
-            cancellationToken = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
             bagDefaultScale = bagAnimationPivot.localScale;
             toys = new();
             answersEffects = new();
@@ -60,22 +59,16 @@ namespace MiniGames.Modules.Level.XmasTree
             star.starToy.DefaultPos = endRevealPivot.position;
             star.starCell.correctAnswerEvent += () =>
             {
-                cancellationToken.Cancel();
+                cts.Cancel();
             };
             button.onClick.AddListener(ButtonListener);
-            bagPointerHelper.gameObject.SetActive(false);
             Shuffle(ref toys);
+            tutorialHelper.Initialize(() => button.interactable == false);
         }
 
         public void ShowHelper()
         {
-            bagPointerHelper.gameObject.SetActive(true);
-            bagPointerHelper.DOMove(bagPointerHelper.position + (bagPointerHelper.up * 0.2f), 0.7f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
-        }
-        public void HideHelper()
-        {
-            bagPointerHelper.DOKill();
-            bagPointerHelper.gameObject.SetActive(false);
+            tutorialHelper.ShowHelper();
         }
 
         private void Shuffle(ref List<Draggable> list)
@@ -87,10 +80,6 @@ namespace MiniGames.Modules.Level.XmasTree
         private void ButtonListener()
         {
             button.interactable = false;
-            if (bagPointerHelper.gameObject.activeInHierarchy == true)
-            {
-                HideHelper();
-            }
             Animation();
         }
 
@@ -129,8 +118,8 @@ namespace MiniGames.Modules.Level.XmasTree
 
         private void NewToyPreparation()
         {         
-            cancellationToken.Cancel();
-            cancellationToken = new CancellationTokenSource();
+            cts.Cancel();
+            cts = new CancellationTokenSource();
             answersEffects[currentToy].gameObject.SetActive(true);
             answersEffects[currentToy].Play();
             button.interactable = true; //end
@@ -144,10 +133,10 @@ namespace MiniGames.Modules.Level.XmasTree
             currentToy.Image.OnEndDragAsObservable().RepeatUntilDisable(this).Subscribe(async x =>
             {
                 await UniTask.WaitUntil(() => currentToy.Image.raycastTarget == true, 
-                    cancellationToken: cancellationToken.Token);
+                    cancellationToken: cts.Token);
                 currentToy.transform.DOMove(currentToy.transform.position + (currentToy.transform.up * 0.3f), 0.6f)
                .SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
-            }).AddTo(cancellationToken.Token);        
+            }).AddTo(cts.Token);        
         }
 
         private void OnDestroy()
@@ -156,12 +145,11 @@ namespace MiniGames.Modules.Level.XmasTree
             {
                 Destroy(item.Value.gameObject);
             }
-            bagPointerHelper.DOKill();
             if (currentToy!=null)
             {
                 currentToy.transform.DOKill();
             }
-            cancellationToken.Cancel();
+            cts.Cancel();
         }
 
     }

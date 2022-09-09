@@ -42,13 +42,13 @@ namespace MiniGames.Modules.Level.XmasTree
         public StarData Star => star;
         public List<ToyCellPair> ToyCellPairs => toyCellPairs;
         public GraphicRaycaster Raycaster { get; private set; }
-        private CancellationTokenSource cancellationToken;
+        private CancellationTokenSource cts;
 
         private void Awake()
         {
             Raycaster = GetComponent<GraphicRaycaster>();
             Raycaster.enabled = false;
-            cancellationToken = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
             snow.Play();
             winEffect.gameObject.SetActive(false);
             SetupToysCells();
@@ -64,7 +64,7 @@ namespace MiniGames.Modules.Level.XmasTree
         {
             animator.ShowingAnimation(async () =>
             {
-                await UniTask.Delay(200, cancellationToken: cancellationToken.Token);
+                await UniTask.Delay(200, cancellationToken: cts.Token);
                 toysBagController.ShowHelper();
                 Raycaster.enabled = true;
                 backToMenuSlider.gameObject.SetActive(true);
@@ -103,24 +103,24 @@ namespace MiniGames.Modules.Level.XmasTree
         {
             if (isNeedReward)
                 backToMenuSlider.gameObject.SetActive(false);
-            await UniTask.Delay(250, cancellationToken: cancellationToken.Token);
+            await UniTask.Delay(250, cancellationToken: cts.Token);
             winEffect.gameObject.SetActive(true);
             winEffect.Play();
-            await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy == false, cancellationToken: cancellationToken.Token);
+            await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy == false, cancellationToken: cts.Token);
             if (isNeedReward)
                 scratcher.StartScratching();
             else
             {
                 scratchAgainButton.Activate();
-                await UniTask.WaitUntil(() => scratchAgainButton.Button.interactable == false, cancellationToken: cancellationToken.Token);
+                await UniTask.WaitUntil(() => scratchAgainButton.Button.interactable == false, cancellationToken: cts.Token);
             }
-            await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
+            await UniTask.Delay(3000, cancellationToken: cts.Token);
             gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
-            cancellationToken.Cancel();
+            cts.Cancel();
         }
     }
 }
