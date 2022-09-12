@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
@@ -12,6 +10,13 @@ namespace MiniGames.Modules.Level.Utils
     {
         public event Action correctAnswerEvent;
 
+        public enum DropAction
+        {
+            Disappear,
+            None
+        }
+
+        [SerializeField] private DropAction dropAction;
         [SerializeField] private float enterScale;
         private RectTransform rectTransform;
         private Vector3 defaultScale;
@@ -37,22 +42,34 @@ namespace MiniGames.Modules.Level.Utils
             rectTransform.DOKill();
             rectTransform.DOScale(rectTransform.localScale / enterScale, 0.3f).endValue = defaultScale;
             
-            if (eventData.pointerDrag == correctObject.gameObject/*&&Draggable.s_currentDraggable==eventData.pointerDrag*/)
+            if (eventData.pointerDrag == correctObject.gameObject)
             {
                 correctObject.selfControl = false;
-                correctObject.transform.DOKill();
-                correctObject.transform.DOMove(transform.position, 0.2f).OnStart(() =>
+                switch (dropAction)
                 {
-                    correctAnswerEvent?.Invoke();
-                    gameObject.SetActive(false);
-                });
-
+                    case DropAction.Disappear:
+                        correctObject.transform.DOKill();
+                        correctObject.transform.DOMove(transform.position, 0.2f).OnStart(() =>
+                        {
+                            correctAnswerEvent?.Invoke();
+                            gameObject.SetActive(false);
+                        });
+                        break;
+                    case DropAction.None:
+                        correctObject.transform.DOMove(transform.position, 0.2f).OnStart(() =>
+                        {
+                            correctObject.gameObject.SetActive(false);
+                            eventData.pointerDrag = null;
+                            correctAnswerEvent?.Invoke();
+                        });
+                        break;
+                }
             }
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (eventData.pointerDrag != null /*&& Draggable.s_currentDraggable == eventData.pointerDrag*/)
+            if (eventData.pointerDrag != null)
             {
                 rectTransform.DOKill();
                 rectTransform.DOScale(rectTransform.localScale * enterScale, 0.2f).startValue = defaultScale;
@@ -60,8 +77,8 @@ namespace MiniGames.Modules.Level.Utils
         }
 
         public void OnPointerExit(PointerEventData eventData)
-        {
-            if (eventData.pointerDrag != null /*&& Draggable.s_currentDraggable == eventData.pointerDrag*/)
+        {          
+            if (eventData.pointerDrag != null)
             {
                 rectTransform.DOKill();
                 rectTransform.DOScale(rectTransform.localScale / enterScale, 0.2f).endValue = defaultScale;

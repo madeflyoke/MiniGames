@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using DG.Tweening;
 using MiniGames.Modules.Level.Utils;
+using MiniGames.Extensions;
 
 namespace MiniGames.Modules.Level.MatchTwo
 {
@@ -58,7 +59,7 @@ namespace MiniGames.Modules.Level.MatchTwo
             }
             SetupButtons();
             currentLevelIndex = 0;
-            Shuffle(ref items);
+            items = items.Shuffle();
         }
 
         public override void StartGame()
@@ -83,8 +84,7 @@ namespace MiniGames.Modules.Level.MatchTwo
                 selectedItems.Add(items[i]);
             }
             items.RemoveRange(0, max);
-            Shuffle(ref selectedItems);
-
+            selectedItems = selectedItems.Shuffle();
             int index = 0;
             foreach (var itemPivot in itemsPivots) //setup pivot sprites by items
             {
@@ -235,12 +235,6 @@ namespace MiniGames.Modules.Level.MatchTwo
             }
             await UniTask.Delay(3000, cancellationToken: cts.Token);
             gameObject.SetActive(false);
-        }
-
-        private void Shuffle(ref List<Sprite> list)
-        {
-            System.Random rnd = new();
-            list = list.OrderBy(x => rnd.Next()).ToList();
         }
 
         private void OnDestroy()

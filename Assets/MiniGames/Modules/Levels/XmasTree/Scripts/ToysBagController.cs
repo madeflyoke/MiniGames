@@ -8,6 +8,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using UniRx.Triggers;
 using UniRx;
+using MiniGames.Extensions;
 
 namespace MiniGames.Modules.Level.XmasTree
 {
@@ -62,19 +63,13 @@ namespace MiniGames.Modules.Level.XmasTree
                 cts.Cancel();
             };
             button.onClick.AddListener(ButtonListener);
-            Shuffle(ref toys);
+            toys = toys.Shuffle();
             tutorialHelper.Initialize(() => button.interactable == false);
         }
 
         public void ShowHelper()
         {
             tutorialHelper.ShowHelper();
-        }
-
-        private void Shuffle(ref List<Draggable> list)
-        {
-            System.Random rnd = new();
-            list = list.OrderBy(x => rnd.Next()).ToList();
         }
 
         private void ButtonListener()
