@@ -15,6 +15,7 @@ namespace MiniGames.Managers
         [SerializeField] private GameObject mathModulePrefab;
         [SerializeField] private GameObject xmasTreeModulePrefab;
         [SerializeField] private GameObject matchTwoModulePrefab;
+        [SerializeField] private GameObject colorBucketsPrefab;
         [SerializeField] private LoadingScreen loadingScreen;
         private Module currentModule;
         private CancellationTokenSource cts;
@@ -42,6 +43,7 @@ namespace MiniGames.Managers
                     currentModule = container.InstantiatePrefab(matchTwoModulePrefab.gameObject).GetComponent<Module>();
                     break;
                 case LevelType.ColorBuckets:
+                    currentModule = container.InstantiatePrefab(colorBucketsPrefab.gameObject).GetComponent<Module>();
                     break;
                 case LevelType.XmasTree:
                     currentModule = container.InstantiatePrefab(xmasTreeModulePrefab.gameObject).GetComponent<Module>();

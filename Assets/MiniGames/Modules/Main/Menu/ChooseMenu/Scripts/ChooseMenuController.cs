@@ -20,6 +20,7 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
         [SerializeField] private Island housesIsland;
         [SerializeField] private Island caseIsland;
         [SerializeField] private Island winterIsland;
+        [SerializeField] private Island bucketsIsland;
 
         public void Initialize(MenuModule.Mode mode)
         {
@@ -71,6 +72,7 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
                 SetupIslandButton(housesIsland, LevelType.Math);
                 SetupIslandButton(winterIsland, LevelType.XmasTree);
                 SetupIslandButton(caseIsland, LevelType.MatchTwo);
+                SetupIslandButton(bucketsIsland, LevelType.ColorBuckets);
             });
         }
 

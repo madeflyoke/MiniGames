@@ -80,7 +80,9 @@ namespace MiniGames.Modules.Level.Math
                 {
                     for (int i = 0; i < mathAnswersDefaultScales.Count; i++)
                     {
-                        if (i == (mathAnswersDefaultScales.Count - 1))
+                        orderedVariants[i].transform.localScale = Vector3.zero;
+                        orderedVariants[i].gameObject.SetActive(true);
+                        if (i == (mathAnswersDefaultScales.Count - 1))//last animation to callback
                         {
                             orderedVariants[i].transform.DOScale(mathAnswersDefaultScales[orderedVariants[i]], showSpeedTime)
                         .SetDelay(i * showSpaceTime * 0.7f + 1f).OnComplete(() => onComplete?.Invoke());
@@ -96,7 +98,6 @@ namespace MiniGames.Modules.Level.Math
         {
             Sequence mySequence = DOTween.Sequence();
             mySequence
-
                 .Join(questionScales.leftDefaultScale.Key.DOScale(0, hidingSpeedTime))
                 .Join(questionScales.mathOperatorDefaultScale.Key.DOScale(0, hidingSpeedTime))
                 .Join(questionScales.rightDefaultScale.Key.DOScale(0, hidingSpeedTime))
@@ -107,6 +108,7 @@ namespace MiniGames.Modules.Level.Math
                     foreach (var item in orderedVariants)
                     {
                         item.transform.DOScale(0, hidingSpeedTime);
+                        item.gameObject.SetActive(false);
                     }
                 }).OnComplete(()=>onComplete?.Invoke());      
         }

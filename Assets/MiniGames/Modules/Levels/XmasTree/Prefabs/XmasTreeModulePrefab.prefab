@@ -21670,7 +21670,7 @@ GameObject:
   - component: {fileID: 4699313512259318062}
   - component: {fileID: 3574227658845940084}
   m_Layer: 0
-  m_Name: XmasTreeModule
+  m_Name: XmasTreeModulePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

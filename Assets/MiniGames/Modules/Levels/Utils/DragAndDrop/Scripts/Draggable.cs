@@ -15,6 +15,7 @@ namespace MiniGames.Modules.Level.Utils
         public Vector3 DefaultPos { get; set; }
         private RectTransform rectTransform;
         private Canvas canvas;
+        private Vector3 defaultScale;
 
         private void Awake()
         {
@@ -23,8 +24,8 @@ namespace MiniGames.Modules.Level.Utils
             rectTransform = GetComponent<RectTransform>();
             canvas = GetComponentInParent<Canvas>();
             DefaultPos = transform.position; //world pos
+            defaultScale = transform.localScale; 
         }
-
 
         public void OnDrag(PointerEventData eventData)
         {
@@ -54,7 +55,9 @@ namespace MiniGames.Modules.Level.Utils
 
         public void ResetValues()
         {
+            gameObject.SetActive(false);
             transform.position = DefaultPos;
+            transform.localScale = defaultScale;
             Image.raycastTarget = true;
             selfControl = true;
         }

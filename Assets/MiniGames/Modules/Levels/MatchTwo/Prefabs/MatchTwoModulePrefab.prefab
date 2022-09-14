@@ -1624,7 +1624,7 @@ GameObject:
   - component: {fileID: 1851371376734441765}
   - component: {fileID: 4929245873290690193}
   m_Layer: 0
-  m_Name: MatchTwoModule
+  m_Name: MatchTwoModulePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
