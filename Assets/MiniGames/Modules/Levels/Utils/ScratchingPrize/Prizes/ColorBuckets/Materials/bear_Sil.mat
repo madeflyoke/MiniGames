@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: tmp_Sil
+  m_Name: bear_Sil
   m_Shader: {fileID: -6465566751694194690, guid: ce116f31ff1548745b029e3922b21b23, type: 3}
   m_ValidKeywords:
   - _MODE_TEXTURE
@@ -48,6 +48,6 @@ Material:
     - _isActive: 1
     m_Colors:
     - _ScratchColor: {r: 0, g: 0, b: 0, a: 1}
-    - _WrapperOffset: {r: -0.39, g: -0.13, b: 0, a: 0}
-    - _WrapperTiling: {r: 1.67, g: 1.35, b: 0, a: 0}
+    - _WrapperOffset: {r: -0.99, g: -0.27, b: 0, a: 0}
+    - _WrapperTiling: {r: 1.11, g: 1.51, b: 0, a: 0}
   m_BuildTextureStacks: []

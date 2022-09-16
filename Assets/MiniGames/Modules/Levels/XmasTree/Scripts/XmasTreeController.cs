@@ -99,15 +99,15 @@ namespace MiniGames.Modules.Level.XmasTree
             star.starCell.correctAnswerEvent += OnLastAnswerDone;
         }
 
-        private async void OnLastAnswerDone() //check whether its first walkthrough or not
+        private async void OnLastAnswerDone() 
         {
-            if (isNeedReward)
+            if (isNeedReward) 
                 backToMenuSlider.gameObject.SetActive(false);
             await UniTask.Delay(250, cancellationToken: cts.Token);
             winEffect.gameObject.SetActive(true);
             winEffect.Play();
             await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy == false, cancellationToken: cts.Token);
-            if (isNeedReward)
+            if (isNeedReward)  //check whether its first walkthrough or not
                 scratcher.StartScratching();
             else
             {

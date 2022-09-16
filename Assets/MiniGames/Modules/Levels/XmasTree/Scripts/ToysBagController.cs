@@ -117,7 +117,7 @@ namespace MiniGames.Modules.Level.XmasTree
             cts = new CancellationTokenSource();
             answersEffects[currentToy].gameObject.SetActive(true);
             answersEffects[currentToy].Play();
-            button.interactable = true; //end
+            button.interactable = true; //last
         }
 
         private void SupportToyAnimation()

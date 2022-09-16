@@ -30,6 +30,7 @@ namespace MiniGames.Modules.Level.ColorBuckets
         private Dictionary<DropZone, ParticleSystem> bucketsParticles;
         private int maxAnswers;
         private CancellationTokenSource cts;
+        private List<ParticleSystem> particles;
 
         private void Awake()
         {
@@ -39,6 +40,7 @@ namespace MiniGames.Modules.Level.ColorBuckets
             previousColorSets = new();
             bucketsDropZones = new();
             bucketsParticles = new();
+            particles = new();
             foreach (var item in buckets)
             {
                 DropZone dropZone = item.GetComponent<DropZone>();
@@ -46,6 +48,7 @@ namespace MiniGames.Modules.Level.ColorBuckets
                     correctAnswerEffect, item.transform.position+(Vector3.back*20f), correctAnswerEffect.transform.rotation);
                 particle.gameObject.SetActive(false);
                 bucketsParticles[dropZone] = particle;
+                particles.Add(particle);
                 bucketsDropZones[item] = dropZone;
                 dropZone.correctAnswerEvent += CheckAnswersRow;
                 dropZone.correctAnswerEvent += () =>
@@ -62,6 +65,7 @@ namespace MiniGames.Modules.Level.ColorBuckets
         {
             animator.ShowAnimation();
             SupportToysAnimation();
+            backToMenuSlider.gameObject.SetActive(true);
         }
 
         private void CheckAnswersRow()
@@ -168,6 +172,16 @@ namespace MiniGames.Modules.Level.ColorBuckets
             }
             await UniTask.Delay(3000, cancellationToken: cts.Token);
             gameObject.SetActive(false);
+            cts.Cancel();
+        }
+
+        private void OnDestroy()
+        {
+            cts.Cancel();
+            foreach (var item in particles)
+            {
+                Destroy(item.gameObject);
+            }
         }
     }
 }

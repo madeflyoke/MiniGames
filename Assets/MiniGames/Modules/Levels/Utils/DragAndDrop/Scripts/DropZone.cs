@@ -74,8 +74,7 @@ namespace MiniGames.Modules.Level.Utils
             {
                 rectTransform.DOKill();
                 rectTransform.DOScale(rectTransform.localScale / enterScale, 0.3f).endValue = defaultScale;
-            }
-                
+            }               
         }
 
         public void OnPointerEnter(PointerEventData eventData)

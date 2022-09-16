@@ -43,7 +43,6 @@ namespace MiniGames.Modules.Level.ColorBuckets
 
         public async void ShowAnimation()
         {
-            await UniTask.Delay(1000, cancellationToken: cts.Token);
             foreach (var item in bucketsPivots)
             {
                 await UniTask.Delay(450, cancellationToken: cts.Token);
@@ -87,6 +86,23 @@ namespace MiniGames.Modules.Level.ColorBuckets
                     return;
                 }
             }
+        }
+
+        private void OnDestroy()
+        {
+            foreach (var item in bucketsPivots)
+            {
+                item.DOKill();
+            }
+            foreach (var item in toysPivots)
+            {
+                item.DOKill();
+            }
+            foreach (var item in checkMarks)
+            {
+                item.transform.DOKill();
+            }
+            cts.Cancel();
         }
     }
 
