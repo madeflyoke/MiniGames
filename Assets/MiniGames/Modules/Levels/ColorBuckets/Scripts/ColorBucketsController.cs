@@ -18,6 +18,7 @@ namespace MiniGames.Modules.Level.ColorBuckets
         private const int _levelsCount = 5;
 
         [SerializeField] private ColorBucketsAnimator animator;
+        [SerializeField] private ColorBucketsHelper helper;
         [SerializeField] private ParticleSystem winEffect;
         [SerializeField] private ParticleSystem correctAnswerEffect;
         [SerializeField] private ScratchAgainButton scratchAgainButton;
@@ -59,11 +60,12 @@ namespace MiniGames.Modules.Level.ColorBuckets
             }
             toys = toys.Shuffle();
             SetAnswers();
+            helper.Initialize(buckets[1], helper.DefaultStopTrigger);
         }
 
         public override void StartGame()
         {
-            animator.ShowAnimation();
+            animator.ShowAnimation(()=>helper.ShowHelper());
             SupportToysAnimation();
             backToMenuSlider.gameObject.SetActive(true);
         }
@@ -85,7 +87,7 @@ namespace MiniGames.Modules.Level.ColorBuckets
                 {
                     animator.SetCheckMark();
                     SetAnswers();
-                    animator.ShowAnimation();
+                    animator.ShowAnimation(null);
                     SupportToysAnimation();
                 });
             }
@@ -180,7 +182,7 @@ namespace MiniGames.Modules.Level.ColorBuckets
             cts.Cancel();
             foreach (var item in particles)
             {
-                Destroy(item.gameObject);
+                Destroy(item);
             }
         }
     }

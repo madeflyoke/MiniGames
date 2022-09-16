@@ -41,7 +41,7 @@ namespace MiniGames.Modules.Level.ColorBuckets
             }
         }
 
-        public async void ShowAnimation()
+        public async void ShowAnimation(Action onComplete)
         {
             foreach (var item in bucketsPivots)
             {
@@ -58,6 +58,7 @@ namespace MiniGames.Modules.Level.ColorBuckets
                 item.DOScale(defScale, 0.5f).SetEase(Ease.InOutElastic, -1);
             }
             await UniTask.Delay(500, cancellationToken: cts.Token);
+            onComplete?.Invoke();
         }
 
         public async void HideAnimation(Action onComplete)

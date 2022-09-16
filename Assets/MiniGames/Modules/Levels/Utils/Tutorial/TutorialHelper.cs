@@ -11,8 +11,14 @@ namespace MiniGames.Modules.Level.Utils
     {
         [SerializeField] protected List<Transform> helperPointers;
 
+        public Func<bool> DefaultStopTrigger { get; private set; } = () => Input.GetKeyDown(KeyCode.Mouse0);
         protected CancellationTokenSource cts;
         protected Func<bool> stopTrigger;
+
+        private void Awake()
+        {
+           
+        }
 
         public virtual void Initialize(Func<bool> stopTrigger)
         {
