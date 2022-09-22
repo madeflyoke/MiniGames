@@ -59,19 +59,25 @@ namespace MiniGames.Modules.Main.Menu
 
         private void ButtonListener()
         {
+            prizesButton.interactable = false;
             if (prizesScrollView.activeInHierarchy == false)
             {
                 DOTween.Sequence()
                .Append(prizesScrollView.transform.DOMove(toPos.position, 0.35f))
-               .Join(prizesScrollView.transform.DOScale(defaultScrollViewScale, 0.35f)).SetEase(Ease.InQuad);
+               .Join(prizesScrollView.transform.DOScale(defaultScrollViewScale, 0.35f)).SetEase(Ease.InQuad)
+               .OnComplete(()=> prizesButton.interactable = true);
                 prizesScrollView.SetActive(true);
             }
             else
             {
                 DOTween.Sequence()
                .Append(prizesScrollView.transform.DOMove(fromPos.position, 0.35f))
-               .Join(prizesScrollView.transform.DOScale(0f, 0.35f))
-               .OnComplete(() => prizesScrollView.SetActive(false)).SetEase(Ease.InQuad);
+               .Join(prizesScrollView.transform.DOScale(0f, 0.35f)).SetEase(Ease.InQuad)
+               .OnComplete(() =>
+               {
+                   prizesScrollView.SetActive(false);
+                   prizesButton.interactable = true;
+               });             
             }       
         }
 

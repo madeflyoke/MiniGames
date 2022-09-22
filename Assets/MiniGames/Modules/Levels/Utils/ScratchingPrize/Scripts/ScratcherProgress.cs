@@ -48,7 +48,7 @@ namespace MiniGames.Modules.Level.Utils
         private Rect spriteRectOnScreen;
         private Texture2D spriteCopy;
         private int targetPixelsCount;
-        private CancellationTokenSource cancellationToken;
+        private CancellationTokenSource cts;
 
         private void Awake()
         {
@@ -90,7 +90,7 @@ namespace MiniGames.Modules.Level.Utils
         [BurstCompile]
         private async void CheckProgress()
         {
-            cancellationToken = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
             while (Input.GetKey(KeyCode.Mouse0)) 
             {
                 RenderTexture.active = currentRT; //read pixels on late update? works by now 
@@ -126,7 +126,7 @@ namespace MiniGames.Modules.Level.Utils
                 targetSpritePixels.Dispose();
                 resultArray.Dispose();
                 rtPixels.Dispose();
-                await UniTask.Delay(1000, cancellationToken:cancellationToken.Token); //set delay to each loop of checking        
+                await UniTask.Delay(1000, cancellationToken:cts.Token); //set delay to each loop of checking        
             }
         }
 

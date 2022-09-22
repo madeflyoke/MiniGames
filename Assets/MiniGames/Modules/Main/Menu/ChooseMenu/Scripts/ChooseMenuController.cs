@@ -20,6 +20,7 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
         [SerializeField] private Island housesIsland;
         [SerializeField] private Island caseIsland;
         [SerializeField] private Island winterIsland;
+        [SerializeField] private Island bucketsIsland;
 
         public void Initialize(MenuModule.Mode mode)
         {
@@ -71,6 +72,7 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
                 SetupIslandButton(housesIsland, LevelType.Math);
                 SetupIslandButton(winterIsland, LevelType.XmasTree);
                 SetupIslandButton(caseIsland, LevelType.MatchTwo);
+                SetupIslandButton(bucketsIsland, LevelType.ColorBuckets);
             });
         }
 
@@ -88,19 +90,21 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
             housesIsland.StartAnimation();
             caseIsland.StartAnimation();
             winterIsland.StartAnimation();
+            bucketsIsland.StartAnimation();
         }
         private void StopAnimationIslands()
         {
             housesIsland.StopAnimation();
             caseIsland.StopAnimation();
             winterIsland.StopAnimation();
+            bucketsIsland.StopAnimation();
         }
 
         private void TurnOffIslands()
         {
+            StopAnimationIslands();
             islandsPivot.DOPunchScale(Vector3.one * 0.1f, 0.4f, 5).OnComplete(() =>
             {
-                StopAnimationIslands();
                 wavesParticles.SetActive(false);
                 islandsPivot.gameObject.SetActive(false);
             });

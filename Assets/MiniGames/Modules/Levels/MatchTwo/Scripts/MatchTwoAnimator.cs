@@ -7,12 +7,6 @@ namespace MiniGames.Modules.Level.MatchTwo
 {
     public class MatchTwoAnimator : MonoBehaviour
     {
-        public struct ScaleAndPosition
-        {
-            public Vector3 scale;
-            public Vector3 position;
-        }
-
         [SerializeField] private float showingDuration;
         [SerializeField] private float spaceDuration;
         [SerializeField] private float lineSpaceDuration;

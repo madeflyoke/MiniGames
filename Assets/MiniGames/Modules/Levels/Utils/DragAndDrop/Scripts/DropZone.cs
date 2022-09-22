@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
@@ -12,10 +10,17 @@ namespace MiniGames.Modules.Level.Utils
     {
         public event Action correctAnswerEvent;
 
+        public enum DropAction
+        {
+            Disappear,
+            TakeIn
+        }
+
+        [SerializeField] private DropAction dropAction;
         [SerializeField] private float enterScale;
+        public Draggable CorrectObject { get; private set; }
         private RectTransform rectTransform;
         private Vector3 defaultScale;
-        private Draggable correctObject;
 
         private void Awake()
         {
@@ -25,34 +30,56 @@ namespace MiniGames.Modules.Level.Utils
 
         public void Initialize(Draggable correct)
         {
-            if (correctObject!=null)
+            if (CorrectObject!=null)
             {
-                correctObject.ResetValues();
+                CorrectObject.ResetValues();
             }
-            correctObject = correct;
+            CorrectObject = correct;
         }
 
         public void OnDrop(PointerEventData eventData)
-        {        
-            rectTransform.DOKill();
-            rectTransform.DOScale(rectTransform.localScale / enterScale, 0.3f).endValue = defaultScale;
-            
-            if (eventData.pointerDrag == correctObject.gameObject&&Draggable.s_currentDraggable==eventData.pointerDrag)
+        {                
+            if (eventData.pointerDrag == CorrectObject.gameObject)
             {
-                correctObject.selfControl = false;
-                correctObject.transform.DOKill();
-                correctObject.transform.DOMove(transform.position, 0.2f).OnStart(() =>
-                {
-                    correctAnswerEvent?.Invoke();
-                    gameObject.SetActive(false);
-                });
-
+                CorrectObject.selfControl = false;
+                CorrectObject.transform.DOKill();
+                switch (dropAction)
+                {                       
+                    case DropAction.Disappear:
+                        rectTransform.DOKill();
+                        rectTransform.DOScale(rectTransform.localScale / enterScale, 0.3f).endValue = defaultScale;
+                        CorrectObject.transform.DOMove(transform.position, 0.2f).OnStart(() =>
+                        {
+                            gameObject.SetActive(false);
+                            correctAnswerEvent?.Invoke();
+                        });
+                        break;
+                    case DropAction.TakeIn:
+                        DOTween.Sequence()
+                            .Append(CorrectObject.transform.DOMove(transform.position, 0.15f))
+                            .Append(CorrectObject.transform.DOScale(CorrectObject.transform.localScale * 1.2f, 0.3f))
+                            .Append(CorrectObject.transform.DOScale(Vector3.zero, 0.15f))
+                        .OnComplete(() =>
+                        {
+                            CorrectObject.gameObject.SetActive(false);
+                            CorrectObject.ResetValues();
+                            rectTransform.DOKill();
+                            rectTransform.DOScale(rectTransform.localScale / enterScale, 0.2f).endValue = defaultScale;
+                            correctAnswerEvent?.Invoke();
+                        }).SetEase(Ease.OutQuad, -1);
+                        break;
+                }
             }
+            else
+            {
+                rectTransform.DOKill();
+                rectTransform.DOScale(rectTransform.localScale / enterScale, 0.3f).endValue = defaultScale;
+            }               
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (eventData.pointerDrag != null && Draggable.s_currentDraggable == eventData.pointerDrag)
+            if (eventData.pointerDrag != null)
             {
                 rectTransform.DOKill();
                 rectTransform.DOScale(rectTransform.localScale * enterScale, 0.2f).startValue = defaultScale;
@@ -60,8 +87,8 @@ namespace MiniGames.Modules.Level.Utils
         }
 
         public void OnPointerExit(PointerEventData eventData)
-        {
-            if (eventData.pointerDrag != null && Draggable.s_currentDraggable == eventData.pointerDrag)
+        {          
+            if (eventData.pointerDrag != null)
             {
                 rectTransform.DOKill();
                 rectTransform.DOScale(rectTransform.localScale / enterScale, 0.2f).endValue = defaultScale;

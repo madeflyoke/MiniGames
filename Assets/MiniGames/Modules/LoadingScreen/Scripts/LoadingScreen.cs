@@ -14,11 +14,11 @@ namespace MiniGames.Modules.LoadingScreen
         [SerializeField] private float amplitude;
         [SerializeField] private float frequency;
         private Material mat;
-        private CancellationTokenSource cancellationToken;
+        private CancellationTokenSource cts;
 
         private void Awake()
         {
-            cancellationToken = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
             mat = movingPart.material;
         }
 
@@ -29,26 +29,26 @@ namespace MiniGames.Modules.LoadingScreen
             {
                 mat.mainTextureOffset += Vector2.left * speed * Time.deltaTime;
                 mat.mainTextureOffset = new Vector2(mat.mainTextureOffset.x, Mathf.Sin(Time.time * frequency) * amplitude);
-                await UniTask.Yield(cancellationToken.Token);
+                await UniTask.Yield(cts.Token);
             }
         }         
 
         public void StopAnimation()
         {
-            if (cancellationToken !=null)
+            if (cts !=null)
             {
-               cancellationToken.Cancel();
+               cts.Cancel();
             }
-            cancellationToken = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
             mat.mainTextureOffset = Vector3.zero;
             gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
-            if (cancellationToken != null)
+            if (cts != null)
             {
-                cancellationToken.Cancel();
+                cts.Cancel();
             }
         }
     }

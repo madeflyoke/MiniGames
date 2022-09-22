@@ -26,11 +26,11 @@ namespace MiniGames.Modules.Level.Math
         [SerializeField] private MathAnimator animator;
         private GraphicRaycaster canvasRaycaster;
         private List<int> poolOfNumbers;
-        private CancellationTokenSource cancellationToken;
+        private CancellationTokenSource cts;
 
         private void Awake()
         {
-            cancellationToken = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
             canvasRaycaster = GetComponent<GraphicRaycaster>();
             canvasRaycaster.enabled = false;
             question.Initialize(out poolOfNumbers);
@@ -72,11 +72,11 @@ namespace MiniGames.Modules.Level.Math
                 EndLogic();
                 return;
             }
-            await UniTask.Delay(1500, cancellationToken: cancellationToken.Token); //time between questions
+            await UniTask.Delay(1500, cancellationToken: cts.Token); //time between questions
             animator.HidingAnimation(async() =>
             {
                 answerZone.gameObject.SetActive(true);
-                await UniTask.Delay((int)(nextQuestionDelay * 1000), cancellationToken: cancellationToken.Token);
+                await UniTask.Delay((int)(nextQuestionDelay * 1000), cancellationToken: cts.Token);
                 question.SetupQuestion(
                 () => animator.ShowingAnimation(
                     () => canvasRaycaster.enabled = true));
@@ -116,22 +116,22 @@ namespace MiniGames.Modules.Level.Math
                 backToMenuSlider.gameObject.SetActive(false);
             winEffect.gameObject.SetActive(true);
             winEffect.Play();
-            await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy == false, cancellationToken: cancellationToken.Token);
+            await UniTask.WaitUntil(() => winEffect.gameObject.activeInHierarchy == false, cancellationToken: cts.Token);
             if (isNeedReward)
                 scratcher.StartScratching();
             else
             {
                 canvasRaycaster.enabled = true;
                 scratchAgainButton.Activate();
-                await UniTask.WaitUntil(() => scratchAgainButton.Button.interactable == false, cancellationToken: cancellationToken.Token);
+                await UniTask.WaitUntil(() => scratchAgainButton.Button.interactable == false, cancellationToken: cts.Token);
             }
-            await UniTask.Delay(3000, cancellationToken: cancellationToken.Token);
+            await UniTask.Delay(3000, cancellationToken: cts.Token);
             gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
-            Draggable.s_currentDraggable = null;
+            //Draggable.s_currentDraggable = null;
         }
     }
 }

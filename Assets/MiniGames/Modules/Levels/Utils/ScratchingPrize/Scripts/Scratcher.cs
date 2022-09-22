@@ -35,7 +35,7 @@ namespace MiniGames.Modules.Level.Utils
         private Camera mainCam;
         private Vector2 correctionOffset;
         private RenderTexture currentRT;
-        private CancellationTokenSource cancellationToken;
+        private CancellationTokenSource cts;
         private bool canScratch;
 
         private void Awake()
@@ -46,7 +46,7 @@ namespace MiniGames.Modules.Level.Utils
             exitButton.transform.parent.gameObject.SetActive(false);
             mainCam = Camera.main;
             renderTextureCam.transform.position = new Vector3(0, 0, trailPrefab.transform.position.z - 5);
-            cancellationToken = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
             trailPrefab.GetComponent<TrailRenderer>().widthMultiplier = brushSize;
             helperPointer.SetActive(false);
             scratcherProgress = GetComponent<ScratcherProgress>();
@@ -146,8 +146,8 @@ namespace MiniGames.Modules.Level.Utils
         {
             if (targetSr!=null&&rtTexture!=null)
                 targetSr.material.SetTexture(rtTexture, null);
-            if (cancellationToken!=null)
-                 cancellationToken.Cancel();
+            if (cts!=null)
+                 cts.Cancel();
             currentRT.Release();
             currentRT.DiscardContents();
         }
@@ -163,14 +163,19 @@ namespace MiniGames.Modules.Level.Utils
                 }
                 else if (Input.GetKeyUp(KeyCode.Mouse0))
                 {
-                    cancellationToken.Cancel();
+                    cts.Cancel();
                 }
             }
         }
        
         private async void SetTrail()
         {
-            cancellationToken = new CancellationTokenSource();
+            if (helperPointer.activeInHierarchy)
+            {
+                helperPointer.transform.DOKill();
+                helperPointer.SetActive(false);
+            }
+            cts = new CancellationTokenSource();
             Vector3 pos = mainCam.ScreenToWorldPoint(Input.mousePosition);
             Vector3 posOffseted = pos +(Vector3)correctionOffset;
             Vector3 correctMousePos = new Vector3(posOffseted.x, posOffseted.y, 0f);
@@ -187,7 +192,7 @@ namespace MiniGames.Modules.Level.Utils
                 correctMousePos = new Vector3(posOffseted.x, posOffseted.y, 0f);
                 scratchEffect.transform.position = new Vector3(pos.x, pos.y, mainCam.transform.position.z + 10f);
                 trail.transform.position = correctMousePos;
-                await UniTask.Yield(cancellationToken.Token);
+                await UniTask.Yield(cts.Token);
             }
         }
     }

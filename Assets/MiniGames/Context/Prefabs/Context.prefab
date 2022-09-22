@@ -649,6 +649,7 @@ MonoBehaviour:
   mathModulePrefab: {fileID: 328520620973824392, guid: 9009e583bfc48db4392412152aadcf22, type: 3}
   xmasTreeModulePrefab: {fileID: 4699313512259318063, guid: 648c594a49859b842805845cd0b76c25, type: 3}
   matchTwoModulePrefab: {fileID: 1851371376734441764, guid: 717f57d7f7300814d9935d2ec3ca56f5, type: 3}
+  colorBucketsPrefab: {fileID: 7859495294690971894, guid: 085e10e7d2a0d554bb95461da6d0f61a, type: 3}
   loadingScreen: {fileID: 2847655538306518788}
 --- !u!1 &9083691865682190504
 GameObject:
@@ -698,6 +699,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: bde6f55945abad1448f61edb9321d9b7, type: 3}
   - {fileID: 21300000, guid: 6bff17ea4d86bb946baeba3f86513f2c, type: 3}
   - {fileID: 21300000, guid: dc50e1278529fc043863ca434ec9e53b, type: 3}
+  - {fileID: 21300000, guid: 9bb509f04ad0144459ce4dc6dd36526d, type: 3}
 --- !u!1 &9083691865721492033
 GameObject:
   m_ObjectHideFlags: 0

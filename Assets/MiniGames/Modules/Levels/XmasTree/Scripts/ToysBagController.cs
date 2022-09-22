@@ -8,6 +8,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using UniRx.Triggers;
 using UniRx;
+using MiniGames.Extensions;
 
 namespace MiniGames.Modules.Level.XmasTree
 {
@@ -18,22 +19,21 @@ namespace MiniGames.Modules.Level.XmasTree
         [SerializeField] private ParticleSystem correctAnswerEffectPrefab;
         [Space]
         [SerializeField] private XmasTreeController xmasTreeController;
+        [SerializeField] private TutorialHelper tutorialHelper;
         [SerializeField] private Button button;
-        [SerializeField] private Transform bagPointerHelper;
         [SerializeField] private RectTransform bagAnimationPivot;
         [SerializeField] private RectTransform startRevealPivot;
         [SerializeField] private RectTransform endRevealPivot;
-
         private Vector3 bagDefaultScale;
         private List<Draggable> toys;
         private XmasTreeController.StarData star;
-        private CancellationTokenSource cancellationToken;
+        private CancellationTokenSource cts;
         private Draggable currentToy;
         private Dictionary<Draggable, ParticleSystem> answersEffects; 
 
         private void Awake()
         {
-            cancellationToken = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
             bagDefaultScale = bagAnimationPivot.localScale;
             toys = new();
             answersEffects = new();
@@ -60,51 +60,33 @@ namespace MiniGames.Modules.Level.XmasTree
             star.starToy.DefaultPos = endRevealPivot.position;
             star.starCell.correctAnswerEvent += () =>
             {
-                cancellationToken.Cancel();
-                Draggable.s_currentDraggable = null;
+                cts.Cancel();
             };
             button.onClick.AddListener(ButtonListener);
-            bagPointerHelper.gameObject.SetActive(false);
-            Shuffle(ref toys);
+            toys = toys.Shuffle();
+            tutorialHelper.Initialize(() => button.interactable == false);
         }
 
         public void ShowHelper()
         {
-            bagPointerHelper.gameObject.SetActive(true);
-            bagPointerHelper.DOMove(bagPointerHelper.position + (bagPointerHelper.up * 0.2f), 0.7f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
-        }
-        public void HideHelper()
-        {
-            bagPointerHelper.DOKill();
-            bagPointerHelper.gameObject.SetActive(false);
-        }
-
-        private void Shuffle(ref List<Draggable> list)
-        {
-            System.Random rnd = new();
-            list = list.OrderBy(x => rnd.Next()).ToList();
+            tutorialHelper.ShowHelper();
         }
 
         private void ButtonListener()
         {
             button.interactable = false;
-            xmasTreeController.Raycaster.enabled = false;
-            if (bagPointerHelper.gameObject.activeInHierarchy == true)
-            {
-                HideHelper();
-            }
             Animation();
         }
 
         private void Animation()
         {
             Sequence seq = DOTween.Sequence(); //bag animation
-            seq.Append(bagAnimationPivot.DOScaleX(bagDefaultScale.x * 1.1f, 0.3f))
-                .Join(bagAnimationPivot.DOScaleY(bagDefaultScale.y * 0.9f, 0.3f))
-                .Append(bagAnimationPivot.DOScaleX(bagDefaultScale.x * 0.88f, 0.2f))
-                .Join(bagAnimationPivot.DOScaleY(bagDefaultScale.y * 1.13f, 0.2f).OnComplete(() => ShowToy()))
-                .Append(bagAnimationPivot.DOScaleX(bagDefaultScale.x, 0.8f))
-                .Join(bagAnimationPivot.DOScaleY(bagDefaultScale.y, 0.8f)).SetEase(Ease.InCubic);
+            seq.Append(bagAnimationPivot.DOScaleX(bagDefaultScale.x * 1.1f, 0.27f))
+                .Join(bagAnimationPivot.DOScaleY(bagDefaultScale.y * 0.9f, 0.27f))
+                .Append(bagAnimationPivot.DOScaleX(bagDefaultScale.x * 0.88f, 0.17f))
+                .Join(bagAnimationPivot.DOScaleY(bagDefaultScale.y * 1.13f, 0.17f).OnComplete(() => ShowToy()))
+                .Append(bagAnimationPivot.DOScaleX(bagDefaultScale.x, 0.72f))
+                .Join(bagAnimationPivot.DOScaleY(bagDefaultScale.y, 0.72f)).SetEase(Ease.InCubic);
         }
 
         private void ShowToy()
@@ -122,22 +104,20 @@ namespace MiniGames.Modules.Level.XmasTree
             }
             currentToy.transform.SetAsLastSibling();
             currentToy.gameObject.SetActive(true);
-            currentToy.transform.DOMove(endRevealPivot.position, 0.8f).SetEase(Ease.OutBack)
+            currentToy.transform.DOMove(endRevealPivot.position, 0.72f).SetEase(Ease.OutBack)
                 .OnComplete(() =>
                 {
-                    xmasTreeController.Raycaster.enabled = true;
                     SupportToyAnimation();
                 });
         }
 
         private void NewToyPreparation()
         {         
-            cancellationToken.Cancel();
-            cancellationToken = new CancellationTokenSource();
+            cts.Cancel();
+            cts = new CancellationTokenSource();
             answersEffects[currentToy].gameObject.SetActive(true);
             answersEffects[currentToy].Play();
-            Draggable.s_currentDraggable = null;
-            button.interactable = true; //end
+            button.interactable = true; //last
         }
 
         private void SupportToyAnimation()
@@ -148,10 +128,10 @@ namespace MiniGames.Modules.Level.XmasTree
             currentToy.Image.OnEndDragAsObservable().RepeatUntilDisable(this).Subscribe(async x =>
             {
                 await UniTask.WaitUntil(() => currentToy.Image.raycastTarget == true, 
-                    cancellationToken: cancellationToken.Token);
+                    cancellationToken: cts.Token);
                 currentToy.transform.DOMove(currentToy.transform.position + (currentToy.transform.up * 0.3f), 0.6f)
                .SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
-            }).AddTo(cancellationToken.Token);        
+            }).AddTo(cts.Token);        
         }
 
         private void OnDestroy()
@@ -160,14 +140,11 @@ namespace MiniGames.Modules.Level.XmasTree
             {
                 Destroy(item.Value.gameObject);
             }
-            bagPointerHelper.DOKill();
             if (currentToy!=null)
             {
                 currentToy.transform.DOKill();
-
             }
-            cancellationToken.Cancel();
-            Draggable.s_currentDraggable = null;
+            cts.Cancel();
         }
 
     }

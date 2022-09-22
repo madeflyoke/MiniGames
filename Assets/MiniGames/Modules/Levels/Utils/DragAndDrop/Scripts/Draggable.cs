@@ -8,8 +8,6 @@ namespace MiniGames.Modules.Level.Utils
     [RequireComponent(typeof(Image), typeof(RectTransform))]
     public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IInitializePotentialDragHandler
     {
-        public static GameObject s_currentDraggable;
-
         [SerializeField] private float returnBackTime = 0.7f;
         [HideInInspector]
         public bool selfControl;
@@ -17,6 +15,7 @@ namespace MiniGames.Modules.Level.Utils
         public Vector3 DefaultPos { get; set; }
         private RectTransform rectTransform;
         private Canvas canvas;
+        private Vector3 defaultScale;
 
         private void Awake()
         {
@@ -25,35 +24,28 @@ namespace MiniGames.Modules.Level.Utils
             rectTransform = GetComponent<RectTransform>();
             canvas = GetComponentInParent<Canvas>();
             DefaultPos = transform.position; //world pos
+            defaultScale = transform.localScale; 
         }
-
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (s_currentDraggable == eventData.pointerDrag)
-            {
-                rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
-            }         
+            rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (selfControl && s_currentDraggable == eventData.pointerDrag)
+            if (selfControl)
             {
                 rectTransform.DOKill();
                 transform.DOMove(DefaultPos, returnBackTime).OnComplete(
-                    () => { Image.raycastTarget = true; s_currentDraggable = null; });              
+                    () => { Image.raycastTarget = true;});              
             }
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (s_currentDraggable == null)
-            {
-                rectTransform.DOKill();
-                s_currentDraggable = eventData.pointerDrag;
-                Image.raycastTarget = false;
-            }
+            rectTransform.DOKill();
+            Image.raycastTarget = false;
         }
 
         public void OnInitializePotentialDrag(PointerEventData eventData)
@@ -63,15 +55,11 @@ namespace MiniGames.Modules.Level.Utils
 
         public void ResetValues()
         {
+            gameObject.SetActive(false);
             transform.position = DefaultPos;
+            transform.localScale = defaultScale;
             Image.raycastTarget = true;
-            s_currentDraggable = null;
             selfControl = true;
-        }
-
-        private void OnDestroy()
-        {
-            s_currentDraggable = null;
         }
     }
 }
