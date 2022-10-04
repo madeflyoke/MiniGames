@@ -13,7 +13,6 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
 
         [SerializeField] private Button mainMenuButton;
 
-        [SerializeField] private List<GameObject> blockedIslandsMasks;
         [SerializeField] private GameObject background;
         [SerializeField] private GameObject wavesParticles;
         [SerializeField] private Transform islandsPivot;
@@ -21,6 +20,7 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
         [SerializeField] private Island caseIsland;
         [SerializeField] private Island winterIsland;
         [SerializeField] private Island bucketsIsland;
+        [SerializeField] private Island totemsIsland;
 
         public void Initialize(MenuModule.Mode mode)
         {
@@ -41,10 +41,6 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
         public void Deactivate()
         {
             background.gameObject.SetActive(true);
-            foreach (var item in blockedIslandsMasks)
-            {
-                item.SetActive(false);
-            }
             mainMenuButton.gameObject.SetActive(false);
             islandsPivot.gameObject.SetActive(false);
             wavesParticles.SetActive(false);
@@ -53,10 +49,6 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
 
         public void Activate()
         {
-            foreach (var item in blockedIslandsMasks)
-            {
-                item.SetActive(true);
-            }
             background.gameObject.SetActive(true);
             islandsPivot.gameObject.SetActive(true);
             mainMenuButton.gameObject.SetActive(true);
@@ -73,6 +65,7 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
                 SetupIslandButton(winterIsland, LevelType.XmasTree);
                 SetupIslandButton(caseIsland, LevelType.MatchTwo);
                 SetupIslandButton(bucketsIsland, LevelType.ColorBuckets);
+                SetupIslandButton(totemsIsland, LevelType.Totems);
             });
         }
 
@@ -91,6 +84,7 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
             caseIsland.StartAnimation();
             winterIsland.StartAnimation();
             bucketsIsland.StartAnimation();
+            totemsIsland.StartAnimation();
         }
         private void StopAnimationIslands()
         {
@@ -98,6 +92,7 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
             caseIsland.StopAnimation();
             winterIsland.StopAnimation();
             bucketsIsland.StopAnimation();
+            totemsIsland.StopAnimation();
         }
 
         private void TurnOffIslands()
@@ -116,8 +111,6 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
             mainMenuButton.onClick.RemoveAllListeners();
         }
 
-
-
         private void SetupIslandButton(Island island, LevelType levelType)
         {
             island.Button.onClick.AddListener(() =>
@@ -129,6 +122,5 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
                 });
             });
         }
-
     }
 }

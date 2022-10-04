@@ -19827,6 +19827,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2a34fa6f9140f54ab7f30bbe5b74465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropAction: 0
   enterScale: 1.1
 --- !u!1 &4699313511073671676
 GameObject:
@@ -20114,6 +20115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2a34fa6f9140f54ab7f30bbe5b74465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropAction: 0
   enterScale: 1.1
 --- !u!1 &4699313511292460045
 GameObject:
@@ -20422,6 +20424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2a34fa6f9140f54ab7f30bbe5b74465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropAction: 0
   enterScale: 1.1
 --- !u!1 &4699313511528371507
 GameObject:
@@ -20897,6 +20900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2a34fa6f9140f54ab7f30bbe5b74465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropAction: 0
   enterScale: 1.1
 --- !u!1 &4699313511800410048
 GameObject:
@@ -21482,6 +21486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2a34fa6f9140f54ab7f30bbe5b74465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropAction: 0
   enterScale: 1.1
 --- !u!1 &4699313512183292653
 GameObject:
@@ -21890,6 +21895,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2a34fa6f9140f54ab7f30bbe5b74465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropAction: 0
   enterScale: 1.1
 --- !u!1 &4699313512434316346
 GameObject:
@@ -22215,6 +22221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2a34fa6f9140f54ab7f30bbe5b74465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropAction: 0
   enterScale: 1.1
 --- !u!1 &4699313512738198719
 GameObject:
@@ -22431,6 +22438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2a34fa6f9140f54ab7f30bbe5b74465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropAction: 0
   enterScale: 1.1
 --- !u!1 &4699313512870609111
 GameObject:
@@ -22775,6 +22783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2a34fa6f9140f54ab7f30bbe5b74465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropAction: 0
   enterScale: 1.1
 --- !u!1 &5827519394197554526
 GameObject:

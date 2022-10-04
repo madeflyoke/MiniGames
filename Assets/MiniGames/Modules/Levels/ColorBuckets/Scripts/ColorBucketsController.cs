@@ -182,7 +182,7 @@ namespace MiniGames.Modules.Level.ColorBuckets
             cts.Cancel();
             foreach (var item in particles)
             {
-                Destroy(item);
+                Destroy(item.gameObject);
             }
         }
     }

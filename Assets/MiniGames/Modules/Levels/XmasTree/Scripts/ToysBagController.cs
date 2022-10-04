@@ -46,7 +46,7 @@ namespace MiniGames.Modules.Level.XmasTree
             {
                 item.toy.gameObject.SetActive(false);
                 item.toy.transform.position = startRevealPivot.transform.position;
-                item.toy.DefaultPos = endRevealPivot.position;
+                item.toy.SetDefaultPosition(endRevealPivot.position);
                 item.toyCell.correctAnswerEvent += NewToyPreparation;
                 var particle = Instantiate(correctAnswerEffectPrefab,
                     item.toyCell.transform.position + Vector3.back * 10f, correctAnswerEffectPrefab.transform.rotation);
@@ -57,7 +57,7 @@ namespace MiniGames.Modules.Level.XmasTree
             star = xmasTreeController.Star;
             star.starToy.gameObject.SetActive(false);
             star.starToy.transform.position = startRevealPivot.transform.position;
-            star.starToy.DefaultPos = endRevealPivot.position;
+            star.starToy.SetDefaultPosition(endRevealPivot.position);
             star.starCell.correctAnswerEvent += () =>
             {
                 cts.Cancel();

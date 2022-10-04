@@ -4,6 +4,6 @@ public enum LevelType
     MatchTwo,
     ColorBuckets,
     XmasTree,
-    TOTEM_UNDEFINED
+    Totems
 }
 
