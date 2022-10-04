@@ -12,10 +12,11 @@ namespace MiniGames.Modules.Level.Utils
         [HideInInspector]
         public bool selfControl;
         public Image Image { get; private set; }
-        public Vector3 DefaultPos { get; set; }
+        private Vector3 defaultPos;
         private RectTransform rectTransform;
         private Canvas canvas;
         private Vector3 defaultScale;
+        private bool customDefaultPosition;
 
         private void Awake()
         {
@@ -23,10 +24,23 @@ namespace MiniGames.Modules.Level.Utils
             Image = GetComponent<Image>();
             rectTransform = GetComponent<RectTransform>();
             canvas = GetComponentInParent<Canvas>();
-            DefaultPos = transform.position; //world pos
-            defaultScale = transform.localScale; 
+            defaultScale = transform.localScale;
         }
 
+        private void Start()
+        {
+            if (customDefaultPosition==false)
+            {
+                defaultPos = transform.position;
+            }
+        }
+
+        public void SetDefaultPosition(Vector3 pos) //so manual control
+        {
+            customDefaultPosition = true;
+            defaultPos = pos;
+        }
+    
         public void OnDrag(PointerEventData eventData)
         {
             rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
@@ -37,7 +51,7 @@ namespace MiniGames.Modules.Level.Utils
             if (selfControl)
             {
                 rectTransform.DOKill();
-                transform.DOMove(DefaultPos, returnBackTime).OnComplete(
+                transform.DOMove(defaultPos, returnBackTime).OnComplete(
                     () => { Image.raycastTarget = true;});              
             }
         }
@@ -56,7 +70,7 @@ namespace MiniGames.Modules.Level.Utils
         public void ResetValues()
         {
             gameObject.SetActive(false);
-            transform.position = DefaultPos;
+            transform.position = defaultPos;
             transform.localScale = defaultScale;
             Image.raycastTarget = true;
             selfControl = true;

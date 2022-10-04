@@ -15,11 +15,6 @@ namespace MiniGames.Modules.Level.Utils
         protected CancellationTokenSource cts;
         protected Func<bool> stopTrigger;
 
-        private void Awake()
-        {
-           
-        }
-
         public virtual void Initialize(Func<bool> stopTrigger)
         {
             cts = new();

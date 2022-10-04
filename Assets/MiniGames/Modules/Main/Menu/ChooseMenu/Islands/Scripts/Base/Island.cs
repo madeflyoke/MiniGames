@@ -12,9 +12,6 @@ namespace MiniGames.Modules.Main.Menu.ChooseMenu
         public virtual void StartAnimation() { }
 
         public virtual void StopAnimation() { }
-
-
-
     }
 
 }
